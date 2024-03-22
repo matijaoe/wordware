@@ -1,0 +1,26 @@
+{
+  "name": "wordware",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "nuxt": "^3.11.1",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.9.0",
+    "@nuxtjs/tailwindcss": "^6.11.4",
+    "eslint": "^8.57.0",
+    "eslint-plugin-format": "^0.1.0",
+    "shadcn-nuxt": "^0.10.2",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.4.3"
+  }
+}
