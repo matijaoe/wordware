@@ -1,6 +1,6 @@
 <template>
-  <Html lang="en">
-    <Body class="bg-primary text-primary-foreground">
+  <Html lang="en" class="dark">
+    <Body>
       <NuxtLayout class="min-h-screen">
         <NuxtPage />
       </NuxtLayout>
