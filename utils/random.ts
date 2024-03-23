@@ -16,3 +16,33 @@ export function secureRandom(count: number) {
   } while (result >= skip)
   return result % count
 }
+
+// Returns an array of objects of length numWords (default 1).
+// Each object in the array represents a word and its index
+// and is the result of numRollsPerWord die rolls (default 5).
+// function getWords (numWords, numRollsPerWord) {
+//   var i,
+//       j,
+//       words,
+//       rollResults,
+//       rollResultsJoined
+
+//   words = []
+
+//   if (!numWords) { numWords = 1 }
+//   if (!numRollsPerWord) { numRollsPerWord = 5 }
+
+//   for (i = 0; i < numWords; i += 1) {
+//     rollResults = []
+
+//     for (j = 0; j < numRollsPerWord; j += 1) {
+// 	  // roll a 6 sided die
+//       rollResults.push(secureRandom(6) + 1)
+//     }
+
+//     rollResultsJoined = rollResults.join('')
+//     words.push(getWordFromWordNum(rollResultsJoined)[0])
+//   }
+
+//   return words
+// }

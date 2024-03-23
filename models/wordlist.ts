@@ -1,11 +1,16 @@
-export type Wordlist = {
+export type WordlistReference = {
+  id: WordlistId
   name: string
   description?: string
   diceware?: {
-    dice: number
-    sourceFile?: string
-    localFile?: string
+    rollsPerWord: number
   }
+  sourceFile?: string
+  localFile?: string
+  files?: { label: string, value: string }[]
+}
+
+export type WordlistCalculated = {
   uniquePrefixChars?: number
   stats?: {
     words: number
@@ -16,9 +21,9 @@ export type Wordlist = {
     longestWordChars: number
     shortestWordChars: number
   }
-  sourceFile?: string
-  localFile?: string
 }
+
+export type Wordlist = Omit<WordlistReference, 'id'> & WordlistCalculated
 
 export type WordlistId =
   | 'eff-long'
@@ -31,7 +36,7 @@ export type WordlistId =
   | 'orchard-street-long'
   | 'orchard-street-medium'
   | 'orchard-street-diceware'
-  | 'orchard-street-short-alpha'
-  | 'orchard-street-short-querty'
+  | 'orchard-street-alpha-dice'
+  | 'orchard-street-qwerty-dice'
   | 'sts10-1password-replacement'
   | '1password-agile'

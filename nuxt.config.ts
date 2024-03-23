@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-icon',
   ],
+
   shadcn: {
     /**
      * Prefix for all the imported component
@@ -17,5 +18,14 @@ export default defineNuxtConfig({
      */
     componentDir: './components/ui',
   },
+
   devtools: { enabled: true },
+
+  imports: {
+    dirs: [
+      'composables/**',
+      // 'stores/**',
+      'utils/**',
+    ],
+  },
 })

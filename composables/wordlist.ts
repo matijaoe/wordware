@@ -15,8 +15,7 @@ export const useWordlistSelection = () => {
   const selectedLists = useCookie<Set<WordlistId>>('wordlist:selection', {
     default: () => DEFAULT_WORDLISTS,
     decode: (value: string) => {
-      // eslint-disable-next-line ts/no-unsafe-assignment, ts/no-unsafe-call
-      const parsedArr: WordlistId[] = destr<WordlistId[]>(value) ?? []
+      const parsedArr = destr<WordlistId[]>(value) ?? []
       return new Set<WordlistId>(parsedArr)
     },
     encode: (value) => JSON.stringify(Array.from(value)),
