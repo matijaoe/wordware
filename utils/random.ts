@@ -1,3 +1,6 @@
+import { titleCase } from 'scule'
+import { getRandomValues } from 'uncrypto'
+
 /**
  * {@link https://www.reddit.com/r/crypto/comments/4xe21s/comment/d6fduhd}
  */
@@ -7,14 +10,53 @@ export function secureRandom(count: number) {
   let result
 
   if (((count - 1) & count) === 0) {
-    window.crypto.getRandomValues(rand)
+    getRandomValues(rand)
     return rand[0] & (count - 1)
   }
   do {
-    window.crypto.getRandomValues(rand)
+    getRandomValues(rand)
     result = rand[0] & 0x7FFFFFFF
   } while (result >= skip)
   return result % count
+}
+
+export const generatePassphrase = (props: {
+  wordlist: string[]
+  count: number
+  separator?: string
+  casing?: 'lower' | 'upper' | 'capitalized'
+}) => {
+  const { wordlist, count, separator = ' ', casing = 'lower' } = props
+  const listLength = wordlist.length
+
+  const words = []
+  for (let i = 0; i < count; i++) {
+    const number = secureRandom(listLength)
+    let word = wordlist.at(number)!
+    switch (casing) {
+      case 'lower':
+        word = word.toLowerCase()
+        break
+      case 'upper':
+        word = word.toUpperCase()
+        break
+      case 'capitalized':
+        word = titleCase(word)
+        break
+    }
+    words.push(word)
+  }
+  return words.join(separator)
+}
+export const generateDicewarePassphrase = (props: {
+  wordlist: string[]
+  count: number
+  separator?: string
+}) => {
+  const { wordlist, count, separator = ' ' } = props
+  const listLength = wordlist.length
+
+  // TODO
 }
 
 // Returns an array of objects of length numWords (default 1).
