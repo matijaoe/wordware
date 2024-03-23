@@ -63,7 +63,7 @@ export const useWordlist = (_wordlistId: MaybeRefOrGetter<WordlistSlug | undefin
       return []
     }
 
-    const exportName = camelCase(wordlistSlug.value)
+    const exportName = camelCase(wordlistSlug.value) as WordlistExport
 
     // TODO: this only gets array ones, not Map
     // probably will have to find another way to store and get words
@@ -71,9 +71,12 @@ export const useWordlist = (_wordlistId: MaybeRefOrGetter<WordlistSlug | undefin
     return res
   })
 
+  const listLength = computed(() => words.value.length)
+
   return {
     wordlist,
     constructedDescription,
     words,
+    listLength,
   }
 }
