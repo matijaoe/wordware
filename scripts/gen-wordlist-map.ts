@@ -13,12 +13,10 @@ const exportTemplate = (content: string) => `export const WordlistMap = ${conten
 const baseDir = 'constants/generated/wordlists'
 const baseOutputDir = 'constants/generated'
 
-const analyzeWordlist = async (wordlistId: WordlistId): Promise<WordlistAnalysis | undefined> => {
+const analyzeWordlist = async (wordlistId: WordlistId): Promise<{ sample: string[], stats: WordlistAnalysis } | undefined> => {
   const filePath = (filename: string) => `${baseDir}/${filename}`
 
-  const file = await loadFile(filePath(`${wordlistId}.ts`), {
-    range: true,
-  })
+  const file = await loadFile(filePath(`${wordlistId}.ts`))
   const defaultExport = file.exports.default as string[]
   const words = [...defaultExport ?? []]
 
@@ -58,7 +56,12 @@ const analyzeWordlist = async (wordlistId: WordlistId): Promise<WordlistAnalysis
     hasDuplicates,
   }
 
-  return stats
+  // TODO: do not return words, have a separate function for fetching words from wordlist
+  // generate index.ts file that exports by id
+  return {
+    sample: words.slice(0, 30),
+    stats,
+  }
 }
 
 const constructWordlistMap = async (): Promise<WordlistMapModel> => {
@@ -67,13 +70,14 @@ const constructWordlistMap = async (): Promise<WordlistMapModel> => {
   for await (const wordlist of wordlistsReference) {
     const { id: wordlistId, ...refData } = wordlist
     console.time(wordlistId)
-    const stats = await analyzeWordlist(wordlistId)
-    if (!stats) {
+    const res = await analyzeWordlist(wordlistId)
+    if (!res) {
       console.log(`❌ Failed to analyze wordlist: ${wordlistId}, skipping...`)
       console.timeEnd(wordlistId)
       continue
     }
-    wordlistMap.set(wordlistId, { ...refData, stats })
+    const { sample, stats } = res
+    wordlistMap.set(wordlistId, { ...refData, sample, stats })
     console.timeEnd(wordlistId)
   }
   console.timeEnd('analyzeWordlist')

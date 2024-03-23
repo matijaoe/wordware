@@ -1,4 +1,5 @@
 import { destr } from 'destr'
+import { WordlistMap } from '~/constants/generated/wordlist-map'
 import type { WordlistId } from '~/models/wordlist'
 
 const DEFAULT_WORDLISTS = new Set<WordlistId>([
@@ -29,7 +30,7 @@ export const useWordlistSelection = () => {
     selectedLists.value.delete(wordlistId)
   }
 
-  const isWordlistSelected = (wordlistId: WordlistId) => {
+  const checkIfWordlistSelected = (wordlistId: WordlistId) => {
     return selectedLists.value.has(wordlistId)
   }
 
@@ -37,6 +38,36 @@ export const useWordlistSelection = () => {
     selectedLists,
     addWordlist,
     removeWordlist,
+    checkIfWordlistSelected,
+  }
+}
+
+export const useWordlist = (_wordlistId: MaybeRefOrGetter<WordlistId | undefined>) => {
+  const wordlistId = computed(() => toValue(_wordlistId))
+
+  const wordlist = computed(() => isDefined(wordlistId) ? WordlistMap.get(wordlistId.value) : undefined)
+
+  // TODO: only temp
+  const constructedDescription = computed(() => {
+    if (!isDefined(wordlist)) {
+      return ''
+    }
+    const { words, entropyPerWord, entropyPerCharacter } = wordlist.value.stats
+    return `${words} words, ${entropyPerWord} bits of entropy per word, ${entropyPerCharacter} bits of entropy per character.`
+  })
+
+  const { checkIfWordlistSelected } = useWordlistSelection()
+
+  const isWordlistSelected = computed(() => {
+    if (!isDefined(wordlistId)) {
+      return false
+    }
+    return checkIfWordlistSelected(wordlistId.value)
+  })
+
+  return {
+    wordlist,
+    constructedDescription,
     isWordlistSelected,
   }
 }

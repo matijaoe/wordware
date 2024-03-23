@@ -26,7 +26,10 @@ export type WordlistAnalysis = {
   hasDuplicates: boolean
 }
 
-export type Wordlist = Omit<WordlistReference, 'id'> & { stats: WordlistAnalysis }
+export type Wordlist = Omit<WordlistReference, 'id'> & {
+  sample: string[]
+  stats: WordlistAnalysis
+}
 
 export type WordlistMapModel = Map<WordlistId, Wordlist>
 
