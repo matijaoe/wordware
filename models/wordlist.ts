@@ -6,23 +6,29 @@ export type WordlistReference = {
     rollsPerWord: number
   }
   sourceFile?: string
-  localFile?: string
+  localFile: string
   files?: { label: string, value: string }[]
 }
 
-export type WordlistCalculated = {
-  uniquePrefixChars?: number
-  stats?: {
-    words: number
-    meanWordLength: number
-    entropyPerWord: number
-    entropyPerChar: number
-    longestWordChars: number
-    shortestWordChars: number
-  }
+export type WordlistAnalysis = {
+  words: number
+  meanWordLength: number
+  entropyPerWord: number
+  entropyPerCharacter: number
+  efficiencyPerCharacter: number
+  shortestWordExample: string
+  longestWordExample: string
+  shortestWordLength: number
+  longestWordLength: number
+  longestSharedPrefix: number
+  uniqueCharacterPrefix: number
+  canBeShortened: boolean
+  hasDuplicates: boolean
 }
 
-export type Wordlist = Omit<WordlistReference, 'id'> & WordlistCalculated
+export type Wordlist = Omit<WordlistReference, 'id'> & { stats: WordlistAnalysis }
+
+export type WordlistMapModel = Map<WordlistId, Wordlist>
 
 export type WordlistId =
   | 'eff-long'

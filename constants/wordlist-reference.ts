@@ -1,10 +1,6 @@
 import type { WordlistReference } from '~/models/wordlist'
 
-// TODO:
-// - wordlist array with sources
-// - from this, write files (as json or as ts?), and on each calculate all possible stats
-
-export const wordlistsReference: WordlistReference[] = [
+export const wordlistsReference = [
   {
     id: 'eff-long',
     name: 'EFF\'s Long Wordlist',
@@ -116,4 +112,4 @@ export const wordlistsReference: WordlistReference[] = [
     sourceFile: 'https://1password.com/txt/agwordlist.txt',
     localFile: 'agile-words-1password.txt',
   },
-]
+] satisfies WordlistReference[]

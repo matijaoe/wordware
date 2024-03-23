@@ -2,10 +2,6 @@
 import Decimal from 'decimal.js-light'
 import { max, min, sum } from '.'
 
-export const entropyPerWord = (listLength: number) => {
-  return new Decimal(listLength).log(2).todp(3).toNumber()
-}
-
 export const shortestWordExample = (list: string[]) => {
   return min(list, (word) => word.length)
 }
@@ -22,6 +18,10 @@ export const longestWordLength = (list: string[]) => {
   return longestWordExample(list)?.length ?? 0
 }
 
+export const entropyPerWord = (listLength: number) => {
+  return new Decimal(listLength).log(2).todp(3).toNumber()
+}
+
 // still not sure about this
 export const assumedEntropyPerCharacter = (list: string[], shortestWordLen?: number) => {
   const _shortestWordLen = shortestWordLen ?? shortestWordLength(list) ?? 0
@@ -35,18 +35,16 @@ export const meanWordLength = (list: string[]) => {
   return totalCharacters.dividedBy(wordCount).todp(2).toNumber()
 }
 
-export const hasDuplicates = (list: string[]) => {
-  return new Set(list).size !== list.length
-}
-
 export const efficiencyPerCharacter = (list: string[]) => {
   const _meanWordLength = new Decimal(meanWordLength(list))
   const _entropyPerWord = new Decimal(entropyPerWord(list.length))
   return _entropyPerWord.dividedBy(_meanWordLength).todp(3).toNumber()
 }
 
-// TODO: in case of bip-39 it returns 3 instead of 4 bcs there are also 3-letter words
-// this should be fixed, ro handled in a differrent function
+export const hasDuplicates = (list: string[]) => {
+  return new Set(list).size !== list.length
+}
+
 export const findLongestSharedPrefix = (list: string[], _longestWordLength?: number): number => {
   let longestSharedPrefix = 0
 
@@ -85,7 +83,7 @@ export const uniqueCharacterPrefix = (list: string[], _longestWordLength?: numbe
 }
 
 // ie has unique prefix shorter than longest word
-// TODO: not really relevenat in cases whens a long word because of which prefix seems to be unique
+// TODO: not really relevant in cases whens a long word because of which prefix seems to be unique
 export const canBeShortened = (list: string[], _longestWordLength?: number) => {
   _longestWordLength = _longestWordLength ?? longestWordLength(list) ?? 0
 
@@ -100,5 +98,6 @@ function findFirstDifferentCharacterZeroIndexed(word1: string, word2: string): n
   return i
 }
 
-// TODO hasPrefixWords (toy, toyota)
+// TODO hasPrefixWords (toy, toyota) - freeOfPrefixWords
 // TODO hasSuffixWords (toy, destroy)
+// TODO meanEditDistance / shortestEditDistance

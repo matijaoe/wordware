@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { wordlistMap } from '~/constants/wordlists'
-import type { WordlistId } from '~/models/wordlist'
+import { WordlistMap } from '~/constants/generated/wordlist-map';
+import type { WordlistId } from '~/models/wordlist';
 
 const { selectedLists, isWordlistSelected, addWordlist, removeWordlist } = useWordlistSelection()
 
@@ -10,7 +10,7 @@ const openedWordlistDetails = computed(() => {
   if (!openedWordlist.value) {
     return undefined
   }
-  return wordlistMap.get(openedWordlist.value)
+  return WordlistMap.get(openedWordlist.value)
 })
 
 const openWordlistDetails = (wordlistId: WordlistId) => {
@@ -73,7 +73,7 @@ watch(isModalOpen, (val) => {
       </div>
     </div>
     <div class="grid-wordlists grid gap-4">
-      <template v-for="[wordlistId, value] in wordlistMap" :key="wordlistId">
+      <template v-for="[wordlistId, value] in WordlistMap" :key="wordlistId">
         <button class="group" @click="openWordlistDetails(wordlistId)">
           <Card class="overflow-hidden group-hover:bg-secondary/10 aspect-square flex flex-col">
             <CardHeader class="text-left">
@@ -125,3 +125,4 @@ watch(isModalOpen, (val) => {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 </style>
+~/constants/wordlist-reference
