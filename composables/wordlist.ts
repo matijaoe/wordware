@@ -1,3 +1,4 @@
+import { destr } from 'destr'
 import type { WordlistId } from '~/models/wordlist'
 
 const DEFAULT_WORDLISTS = new Set<WordlistId>([
@@ -11,30 +12,26 @@ const DEFAULT_WORDLISTS = new Set<WordlistId>([
 ])
 
 export const useWordlistSelection = () => {
-  const selectedLists = useCookie<WordlistId[]>('wordlist:selection', {
-    default: () => [],
+  const selectedLists = useCookie<Set<WordlistId>>('wordlist:selection', {
+    default: () => DEFAULT_WORDLISTS,
+    decode: (value: string) => {
+      // eslint-disable-next-line ts/no-unsafe-assignment, ts/no-unsafe-call
+      const parsedArr: WordlistId[] = destr<WordlistId[]>(value) ?? []
+      return new Set<WordlistId>(parsedArr)
+    },
+    encode: (value) => JSON.stringify(Array.from(value)),
   })
 
-  // const selectedLists = computed({
-  //   get: () => new Set(_selectedLists.value ?? []),
-  //   set: (wordlistSet: Set<WordlistId>) => {
-  //     _selectedLists.value = [...wordlistSet ?? []]
-  //   },
-  // })
-
   const addWordlist = (wordlistId: WordlistId) => {
-    // selectedLists.value.add(wordlistId)
-    return selectedLists.value.push(wordlistId)
+    selectedLists.value.add(wordlistId)
   }
 
   const removeWordlist = (wordlistId: WordlistId) => {
-    // selectedLists.value.delete(wordlistId)
-    return selectedLists.value.filter((id) => id !== wordlistId)
+    selectedLists.value.delete(wordlistId)
   }
 
   const isWordlistSelected = (wordlistId: WordlistId) => {
-    // return selectedLists.value.has(wordlistId)
-    return selectedLists.value.includes(wordlistId)
+    return selectedLists.value.has(wordlistId)
   }
 
   return {

@@ -32,7 +32,8 @@ watch(isModalOpen, (val) => {
         <h1 class="font-bold text-3xl">
           Wordlists
         </h1>
-        {{ selectedLists }}
+        <pre>{{ selectedLists }}</pre>
+
         <Dialog v-model:open="isModalOpen">
           <DialogContent class="max-h-[400px] w-screen">
             <DialogHeader>
