@@ -1,12 +1,16 @@
 <script lang="ts" setup>
+definePageMeta({
+  layout: false,
+})
+
 const route = useRoute('wordlists-slug')
 
-const { wordlist, constructedDescription } = useWordlist(() => route.params.slug)
+const { wordlist, constructedDescription, words } = useWordlist(() => route.params.slug)
 </script>
 
 <template>
-  <div v-if="wordlist">
-    <div class="grid grid-cols-2">
+  <NuxtLayout name="half">
+    <div v-if="wordlist">
       <div>
         <h1 class="text-4xl mb-3">
           {{ wordlist.name }}
@@ -16,9 +20,19 @@ const { wordlist, constructedDescription } = useWordlist(() => route.params.slug
           {{ constructedDescription }}
         </p>
       </div>
-      <div>
-        file
-      </div>
     </div>
-  </div>
+
+    <template #right>
+      <!-- TODO: virtual scroll -->
+      <ScrollArea class="h-screen w-full cursor-crosshair select-none" type="hover">
+        <div class="h-screen overflow-scroll py-4 pr-2">
+          <div class="flex flex-wrap gap-3">
+            <span v-for="word in words" :key="word" class="font-mono text-xl leading-none text-muted-foreground/20 hover:text-muted-foreground">
+              {{ word }}
+            </span>
+          </div>
+        </div>
+      </ScrollArea>
+    </template>
+  </NuxtLayout>
 </template>

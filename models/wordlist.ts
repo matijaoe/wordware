@@ -15,6 +15,7 @@ export type WordlistAnalysis = {
   meanWordLength: number
   entropyPerWord: number
   entropyPerCharacter: number
+  entropyPerUniqueCharacterPrefix: number
   efficiencyPerCharacter: number
   shortestWordExample: string
   longestWordExample: string

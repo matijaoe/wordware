@@ -22,23 +22,10 @@ export const entropyPerWord = (listLength: number) => {
   return new Decimal(listLength).log(2).todp(3).toNumber()
 }
 
-// still not sure about this
-export const assumedEntropyPerCharacter = (list: string[], shortestWordLen?: number) => {
-  const _shortestWordLen = shortestWordLen ?? shortestWordLength(list) ?? 0
-  const assumedEntropyPerWord = new Decimal(entropyPerWord(list.length))
-  return assumedEntropyPerWord.dividedBy(_shortestWordLen).todp(3).toNumber()
-}
-
 export const meanWordLength = (list: string[]) => {
   const totalCharacters = new Decimal(sum(list, (word) => word.length))
   const wordCount = new Decimal(list.length)
   return totalCharacters.dividedBy(wordCount).todp(2).toNumber()
-}
-
-export const efficiencyPerCharacter = (list: string[]) => {
-  const _meanWordLength = new Decimal(meanWordLength(list))
-  const _entropyPerWord = new Decimal(entropyPerWord(list.length))
-  return _entropyPerWord.dividedBy(_meanWordLength).todp(3).toNumber()
 }
 
 export const hasDuplicates = (list: string[]) => {
@@ -80,6 +67,27 @@ export const uniqueCharacterPrefix = (list: string[], _longestWordLength?: numbe
     return longestSharedPrefix + 1
   }
   return longestSharedPrefix
+}
+
+// TODO: check and possibly switch assumedEntropyPerCharacter vs assumedEntropyPerUniqueCharacterPrefix
+
+// still not sure about this should we check by mean word instead
+export const assumedEntropyPerCharacter = (list: string[], providedMeanWordLength?: number) => {
+  const _meanWordLength = providedMeanWordLength ?? meanWordLength(list) ?? 0
+  const assumedEntropyPerWord = new Decimal(entropyPerWord(list.length))
+  return assumedEntropyPerWord.dividedBy(_meanWordLength).todp(3).toNumber()
+}
+
+export const assumedEntropyPerUniqueCharacterPrefix = (list: string[], prefixLength?: number) => {
+  const _prefixLength = prefixLength ?? uniqueCharacterPrefix(list) ?? 0
+  const assumedEntropyPerWord = new Decimal(entropyPerWord(list.length))
+  return assumedEntropyPerWord.dividedBy(_prefixLength).todp(3).toNumber()
+}
+
+export const efficiencyPerCharacter = (list: string[]) => {
+  const _meanWordLength = new Decimal(meanWordLength(list))
+  const _entropyPerWord = new Decimal(entropyPerWord(list.length))
+  return _entropyPerWord.dividedBy(_meanWordLength).todp(3).toNumber()
 }
 
 // ie has unique prefix shorter than longest word

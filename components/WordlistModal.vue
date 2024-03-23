@@ -34,17 +34,51 @@ const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() 
 
         <DialogFooter v-if="wordlist" class="mt-auto !justify-between">
           <div class="flex items-center gap-2">
-            <NuxtLink>
-              <Button variant="outline" size="icon" class="flex items-center gap-2">
-                <Icon name="ph:download-bold" class="text-[1.15em]" @click.stop="" />
-              </Button>
-            </NuxtLink>
-            <NuxtLink external :to="`/wordlists/${wordlistSlug}`">
-              <Button as="div" variant="outline" size="icon" class="flex items-center gap-2">
-                <Icon name="ph:download-bold" class="text-[1.15em]" @click.stop="" />
-              </Button>
-            </NuxtLink>
+            <BaseTooltip content="Download">
+              <NuxtLink download external target="_blank" :to="`/wordlist/${wordlist.localFile}`">
+                <Button as="div" variant="outline" size="icon">
+                  <Icon name="ph:download" class="text-[1.15em]" @click.stop="" />
+                </Button>
+              </NuxtLink>
+            </BaseTooltip>
 
+            <BaseTooltip content="Local source file">
+              <NuxtLink :to="`/wordlist/${wordlist.localFile}`">
+                <Button as="div" variant="outline" size="icon">
+                  <Icon name="ph:file-text" class="text-[1.15em]" @click.stop="" />
+                </Button>
+              </NuxtLink>
+            </BaseTooltip>
+
+            <BaseTooltip content="Original source file">
+              <NuxtLink external target="_blank" :to="wordlist.sourceFile">
+                <Button as="div" variant="outline" size="icon">
+                  <Icon name="ph:globe" class="text-[1.15em]" @click.stop="" />
+                </Button>
+              </NuxtLink>
+            </BaseTooltip>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <BaseTooltip v-if="isWordlistSelected" content="Remove from selection">
+              <Button
+                variant="outline"
+                @click.stop="removeWordlist(wordlistSlug)"
+              >
+                Remove
+              </Button>
+            </BaseTooltip>
+
+            <BaseTooltip v-else content="Add to selection">
+              <Button
+                variant="secondary"
+                with-icon
+                @click.stop="addWordlist(wordlistSlug)"
+              >
+                Add
+                <Icon name="ph:plus-bold" class="text-[1.15em]" />
+              </Button>
+            </BaseTooltip>
             <NuxtLink
               :to="{
                 name: 'wordlists-slug',
@@ -52,28 +86,11 @@ const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() 
               }"
               :external="false"
             >
-              <Button as="div" variant="outline" size="icon" class="flex items-center gap-2">
+              <Button as="div" variant="default" with-icon>
+                More
                 <Icon name="ph:arrow-up-right" class="text-[1.15em]" @click.stop="" />
               </Button>
             </NuxtLink>
-          </div>
-
-          <div>
-            <Button
-              v-if="isWordlistSelected"
-              variant="destructive"
-              @click.stop="removeWordlist(wordlistSlug)"
-            >
-              Remove from selection
-            </Button>
-
-            <Button
-              v-else
-              variant="default"
-              @click.stop="addWordlist(wordlistSlug)"
-            >
-              Add to selection
-            </Button>
           </div>
         </DialogFooter>
       </template>

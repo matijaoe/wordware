@@ -1,4 +1,5 @@
-import { loadFile } from 'magicast'
+import { camelCase } from 'scule'
+import { Wordlists } from '~/constants/generated/wordlists'
 import { wordlistsReference } from '~/constants/wordlist-reference'
 import type { Wordlist, WordlistAnalysis, WordlistMapModel, WordlistSlug } from '~/models/wordlist'
 import * as Anal from '~/utils/analysis'
@@ -10,15 +11,10 @@ const fileGeneratedComment = `
 `.trim()
 const exportTemplate = (content: string) => `export const WordlistMap = ${content}`
 
-const baseDir = 'constants/generated/wordlists'
 const baseOutputDir = 'constants/generated'
 
-const analyzeWordlist = async (wordlistId: WordlistSlug): Promise<{ sample: string[], stats: WordlistAnalysis } | undefined> => {
-  const filePath = (filename: string) => `${baseDir}/${filename}`
-
-  const file = await loadFile(filePath(`${wordlistId}.ts`))
-  const defaultExport = file.exports.default as string[]
-  const words = [...defaultExport ?? []]
+const analyzeWordlist = async (wordlistSlug: WordlistSlug): Promise<{ sample: string[], stats: WordlistAnalysis } | undefined> => {
+  const words = Wordlists[camelCase(wordlistSlug)] as string[]
 
   if (!words) {
     return undefined
@@ -34,6 +30,7 @@ const analyzeWordlist = async (wordlistId: WordlistSlug): Promise<{ sample: stri
   const meanWordLength = Anal.meanWordLength(words)
   const entropyPerWord = Anal.entropyPerWord(wordCount)
   const entropyPerCharacter = Anal.assumedEntropyPerCharacter(words, shortestWordLength)
+  const entropyPerUniqueCharacterPrefix = Anal.assumedEntropyPerUniqueCharacterPrefix(words, meanWordLength)
   const efficiencyPerCharacter = Anal.efficiencyPerCharacter(words)
   const longestSharedPrefix = Anal.findLongestSharedPrefix(words)
   const uniqueCharacterPrefix = Anal.uniqueCharacterPrefix(words)
@@ -45,6 +42,7 @@ const analyzeWordlist = async (wordlistId: WordlistSlug): Promise<{ sample: stri
     meanWordLength,
     entropyPerWord,
     entropyPerCharacter,
+    entropyPerUniqueCharacterPrefix,
     efficiencyPerCharacter,
     longestWordExample,
     shortestWordExample,

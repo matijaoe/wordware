@@ -80,14 +80,24 @@ const generateWordlistExports = async () => {
   let importsContent = ``
 
   const files = await fs.readdir(outputBaseDir)
+  const wordlistExportNames = []
+
   for (const file of files) {
     const fileNameWithoutExtension = path.parse(file).name
     const camelCasedName = camelCase(fileNameWithoutExtension)
-    const importStatement = `export { default as ${camelCasedName} } from './${fileNameWithoutExtension}'\n`
+    wordlistExportNames.push(camelCasedName)
+    const importStatement = `import ${camelCasedName} from './${fileNameWithoutExtension}'\n`
     importsContent += importStatement
   }
 
-  const written = await writeFile(`${outputBaseDir}/index.ts`, importsContent)
+  const unionType = wordlistExportNames.map((slug) => `'${slug}'`).join(' | ')
+  const wordlistExportContent = `export type WordlistExport = ${unionType}\n`
+
+  const exportContent = `export const Wordlists = {\n${files.map((file) => `\t${camelCase(path.parse(file).name)},`).join('\n')}\n}`
+
+  const content = `${fileGeneratedComment('index.ts')}\n\n${importsContent}\n${wordlistExportContent}\n${exportContent}`
+
+  const written = await writeFile(`${outputBaseDir}/index.ts`, content)
   console.log(written
     ? '✅ Generated index.ts file'
     : '❌ Failed to generate index.ts',

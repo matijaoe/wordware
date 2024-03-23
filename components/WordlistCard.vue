@@ -5,13 +5,20 @@ const props = defineProps<{
   wordlistSlug: WordlistSlug
 }>()
 
-const { addWordlist, removeWordlist } = useWordlistSelection()
+const { addWordlist, removeWordlist, checkIfWordlistSelected } = useWordlistSelection()
 
-const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() => props.wordlistSlug)
+const { wordlist, constructedDescription } = useWordlist(() => props.wordlistSlug)
+
+const onGoToWordlist = () => {
+  navigateTo({
+    name: 'wordlists-slug',
+    params: { slug: props.wordlistSlug },
+  })
+}
 </script>
 
 <template>
-  <Card class="overflow-hidden group-hover:bg-secondary/10 aspect-square flex flex-col">
+  <Card class="overflow-hidden hover:bg-secondary/10 aspect-square flex flex-col">
     <template v-if="wordlist">
       <CardHeader class="text-left">
         <CardTitle class="line-clamp-2">
@@ -25,38 +32,34 @@ const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() 
       <CardContent class="grow text-left">
         <div class="flex flex-col h-full mt-auto">
           <div class="flex justify-items-end gap-2 mt-auto ml-auto">
-            <NuxtLink
-              :to="{
-                name: 'wordlists-slug',
-                params: { slug: wordlistSlug }
-              }"
+            <Button
+              variant="outline"
+              size="icon"
+              @click.stop="onGoToWordlist()"
             >
-              <Button as="div" variant="ghost" size="icon" class="flex items-center gap-2">
-                <Icon name="ph:arrow-up-right" class="text-[1.15em]" @click.stop="" />
+              <Icon name="ph:arrow-up-right" class="text-[1.15em]" />
+            </Button>
+
+            <!-- TODO: not working after first remove -->
+            <BaseTooltip v-if="checkIfWordlistSelected(wordlistSlug)" content="Remove from selection">
+              <Button
+                variant="destructive"
+                size="icon"
+                @click.stop="removeWordlist(wordlistSlug)"
+              >
+                <Icon name="ph:minus" class="text-[1.15em]" />
               </Button>
-            </NuxtLink>
+            </BaseTooltip>
 
-            <ClientOnly>
-              <BaseTooltip v-if="isWordlistSelected" content="Remove from selection">
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  @click.stop="removeWordlist(wordlistSlug)"
-                >
-                  <Icon name="ph:minus-bold" class="text-[1.15em]" />
-                </Button>
-              </BaseTooltip>
-
-              <BaseTooltip v-else content="Add to selection">
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  @click.stop="addWordlist(wordlistSlug)"
-                >
-                  <Icon name="ph:plus-bold" class="text-[1.15em]" />
-                </Button>
-              </BaseTooltip>
-            </ClientOnly>
+            <BaseTooltip v-else content="Add to selection">
+              <Button
+                variant="secondary"
+                size="icon"
+                @click.stop="addWordlist(wordlistSlug)"
+              >
+                <Icon name="ph:plus-bold" class="text-[1.15em]" />
+              </Button>
+            </BaseTooltip>
           </div>
         </div>
       </CardContent>

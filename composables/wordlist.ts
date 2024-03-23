@@ -1,5 +1,7 @@
 import { destr } from 'destr'
+import { camelCase } from 'scule'
 import { WordlistMap } from '~/constants/generated/wordlist-map'
+import { type WordlistExport, Wordlists } from '~/constants/generated/wordlists'
 import type { WordlistSlug } from '~/models/wordlist'
 
 const DEFAULT_WORDLISTS = new Set<WordlistSlug>([
@@ -52,22 +54,26 @@ export const useWordlist = (_wordlistId: MaybeRefOrGetter<WordlistSlug | undefin
     if (!isDefined(wordlist)) {
       return ''
     }
-    const { words, entropyPerWord, entropyPerCharacter } = wordlist.value.stats
-    return `${words} words, ${entropyPerWord} bits of entropy per word, ${entropyPerCharacter} bits of entropy per character.`
+    const { words, entropyPerWord, entropyPerCharacter, entropyPerUniqueCharacterPrefix } = wordlist.value.stats
+    return `${words} words, ${entropyPerWord} bits of entropy per word, ${entropyPerCharacter} bits of entropy per character, ${entropyPerUniqueCharacterPrefix} bits of entropy per unique character prefix`
   })
 
-  const { checkIfWordlistSelected } = useWordlistSelection()
-
-  const isWordlistSelected = computed(() => {
+  const words = computed(() => {
     if (!isDefined(wordlistSlug)) {
-      return false
+      return []
     }
-    return checkIfWordlistSelected(wordlistSlug.value)
+
+    const exportName = camelCase(wordlistSlug.value)
+
+    // TODO: this only gets array ones, not Map
+    // probably will have to find another way to store and get words
+    const res = Wordlists[exportName] as string[]
+    return res
   })
 
   return {
     wordlist,
     constructedDescription,
-    isWordlistSelected,
+    words,
   }
 }

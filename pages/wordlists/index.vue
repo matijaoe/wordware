@@ -43,11 +43,10 @@ watch(isModalOpen, (val) => {
     </div>
     <div class="grid-wordlists grid gap-4">
       <template v-for="[wordlistSlug] in WordlistMap" :key="wordlistSlug">
-        <button class="group" @click="openListModal(wordlistSlug)">
-          <WordlistCard
-            :wordlist-slug="wordlistSlug"
-          />
-        </button>
+        <WordlistCard
+          :wordlist-slug="wordlistSlug"
+          @click="openListModal(wordlistSlug)"
+        />
       </template>
     </div>
   </div>
