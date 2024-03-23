@@ -69,9 +69,6 @@ export const uniqueCharacterPrefix = (list: string[], _longestWordLength?: numbe
   return longestSharedPrefix
 }
 
-// TODO: check and possibly switch assumedEntropyPerCharacter vs assumedEntropyPerUniqueCharacterPrefix
-
-// still not sure about this should we check by mean word instead
 export const assumedEntropyPerCharacter = (list: string[], providedMeanWordLength?: number) => {
   const _meanWordLength = providedMeanWordLength ?? meanWordLength(list) ?? 0
   const assumedEntropyPerWord = new Decimal(entropyPerWord(list.length))

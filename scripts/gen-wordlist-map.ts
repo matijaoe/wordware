@@ -29,13 +29,15 @@ const analyzeWordlist = async (wordlistSlug: WordlistSlug): Promise<{ sample: st
 
   const meanWordLength = Anal.meanWordLength(words)
   const entropyPerWord = Anal.entropyPerWord(wordCount)
-  const entropyPerCharacter = Anal.assumedEntropyPerCharacter(words, shortestWordLength)
-  const entropyPerUniqueCharacterPrefix = Anal.assumedEntropyPerUniqueCharacterPrefix(words, meanWordLength)
-  const efficiencyPerCharacter = Anal.efficiencyPerCharacter(words)
+
   const longestSharedPrefix = Anal.findLongestSharedPrefix(words)
   const uniqueCharacterPrefix = Anal.uniqueCharacterPrefix(words)
   const canBeShortened = Anal.canBeShortened(words)
   const hasDuplicates = Anal.hasDuplicates(words)
+
+  const entropyPerCharacter = Anal.assumedEntropyPerCharacter(words, meanWordLength)
+  const entropyPerUniqueCharacterPrefix = Anal.assumedEntropyPerUniqueCharacterPrefix(words, uniqueCharacterPrefix)
+  const efficiencyPerCharacter = Anal.efficiencyPerCharacter(words)
 
   const stats = {
     words: wordCount,
@@ -54,8 +56,6 @@ const analyzeWordlist = async (wordlistSlug: WordlistSlug): Promise<{ sample: st
     hasDuplicates,
   }
 
-  // TODO: do not return words, have a separate function for fetching words from wordlist
-  // generate index.ts file that exports by id
   return {
     sample: words.slice(0, 30),
     stats,
