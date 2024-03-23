@@ -8,6 +8,8 @@ type Props = {
   variant?: ButtonVariants['variant']
   size?: ButtonVariants['size']
   class?: HTMLAttributes['class']
+  // my prop
+  withIcon?: boolean
 } & PrimitiveProps
 
 const props = withDefaults(defineProps<Props>(), {
@@ -19,7 +21,9 @@ const props = withDefaults(defineProps<Props>(), {
   <Primitive
     :as="as"
     :as-child="asChild"
-    :class="cn(buttonVariants({ variant, size }), props.class)"
+    :class="[cn(buttonVariants({ variant, size }), props.class), {
+      'flex items-center gap-2': withIcon,
+    }]"
   >
     <slot />
   </Primitive>

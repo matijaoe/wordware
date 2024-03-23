@@ -39,6 +39,9 @@
     "jsonc",
     "yaml",
     "toml",
-    "astro",
+    "astro"
+  ],
+  "cSpell.words": [
+    "todp"
   ]
 }

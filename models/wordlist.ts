@@ -1,31 +1,40 @@
 export type WordlistReference = {
-  id: WordlistId
+  slug: WordlistSlug
   name: string
   description?: string
   diceware?: {
     rollsPerWord: number
   }
   sourceFile?: string
-  localFile?: string
+  localFile: string
   files?: { label: string, value: string }[]
 }
 
-export type WordlistCalculated = {
-  uniquePrefixChars?: number
-  stats?: {
-    words: number
-    meanWordLength: number
-    avgWordLength: number
-    entropyPerWord: number
-    entropyPerChar: number
-    longestWordChars: number
-    shortestWordChars: number
-  }
+export type WordlistAnalysis = {
+  words: number
+  meanWordLength: number
+  entropyPerWord: number
+  entropyPerCharacter: number
+  entropyPerUniqueCharacterPrefix: number
+  efficiencyPerCharacter: number
+  shortestWordExample: string
+  longestWordExample: string
+  shortestWordLength: number
+  longestWordLength: number
+  longestSharedPrefix: number
+  uniqueCharacterPrefix: number
+  canBeShortened: boolean
+  hasDuplicates: boolean
 }
 
-export type Wordlist = Omit<WordlistReference, 'id'> & WordlistCalculated
+export type Wordlist = WordlistReference & {
+  sample: string[]
+  stats: WordlistAnalysis
+}
 
-export type WordlistId =
+export type WordlistMapModel = Map<WordlistSlug, Wordlist>
+
+export type WordlistSlug =
   | 'eff-long'
   | 'eff-short-1'
   | 'eff-short-2'
@@ -36,7 +45,7 @@ export type WordlistId =
   | 'orchard-street-long'
   | 'orchard-street-medium'
   | 'orchard-street-diceware'
-  | 'orchard-street-alpha-dice'
-  | 'orchard-street-qwerty-dice'
+  | 'orchard-street-alpha'
+  | 'orchard-street-qwerty'
   | 'sts10-1password-replacement'
-  | '1password-agile'
+  | 'agile-words-1password'

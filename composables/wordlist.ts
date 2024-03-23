@@ -1,7 +1,10 @@
 import { destr } from 'destr'
-import type { WordlistId } from '~/models/wordlist'
+import { camelCase } from 'scule'
+import { WordlistMap } from '~/constants/generated/wordlist-map'
+import { type WordlistExport, Wordlists } from '~/constants/generated/wordlists'
+import type { WordlistSlug } from '~/models/wordlist'
 
-const DEFAULT_WORDLISTS = new Set<WordlistId>([
+const DEFAULT_WORDLISTS = new Set<WordlistSlug>([
   'eff-long',
   'eff-short-1',
   'eff-short-2',
@@ -12,31 +15,65 @@ const DEFAULT_WORDLISTS = new Set<WordlistId>([
 ])
 
 export const useWordlistSelection = () => {
-  const selectedLists = useCookie<Set<WordlistId>>('wordlist:selection', {
+  const selectedLists = useCookie<Set<WordlistSlug>>('wordlist:selection', {
     default: () => DEFAULT_WORDLISTS,
     decode: (value: string) => {
-      const parsedArr = destr<WordlistId[]>(value) ?? []
-      return new Set<WordlistId>(parsedArr)
+      const parsedArr = destr<WordlistSlug[]>(value) ?? []
+      return new Set<WordlistSlug>(parsedArr)
     },
     encode: (value) => JSON.stringify(Array.from(value)),
   })
 
-  const addWordlist = (wordlistId: WordlistId) => {
-    selectedLists.value.add(wordlistId)
+  const addWordlist = (wordlistSlug: WordlistSlug) => {
+    selectedLists.value.add(wordlistSlug)
   }
 
-  const removeWordlist = (wordlistId: WordlistId) => {
-    selectedLists.value.delete(wordlistId)
+  const removeWordlist = (wordlistSlug: WordlistSlug) => {
+    selectedLists.value.delete(wordlistSlug)
   }
 
-  const isWordlistSelected = (wordlistId: WordlistId) => {
-    return selectedLists.value.has(wordlistId)
+  const checkIfWordlistSelected = (wordlistSlug: WordlistSlug) => {
+    return selectedLists.value.has(wordlistSlug)
   }
 
   return {
     selectedLists,
     addWordlist,
     removeWordlist,
-    isWordlistSelected,
+    checkIfWordlistSelected,
+  }
+}
+
+export const useWordlist = (_wordlistId: MaybeRefOrGetter<WordlistSlug | undefined>) => {
+  const wordlistSlug = computed(() => toValue(_wordlistId))
+
+  const wordlist = computed(() => isDefined(wordlistSlug) ? WordlistMap.get(wordlistSlug.value) : undefined)
+
+  // TODO: only temp
+  const constructedDescription = computed(() => {
+    if (!isDefined(wordlist)) {
+      return ''
+    }
+    const { words, entropyPerWord, entropyPerCharacter, entropyPerUniqueCharacterPrefix } = wordlist.value.stats
+    return `${words} words, ${entropyPerWord} bits of entropy per word, ${entropyPerCharacter} bits of entropy per character, ${entropyPerUniqueCharacterPrefix} bits of entropy per unique character prefix`
+  })
+
+  const words = computed(() => {
+    if (!isDefined(wordlistSlug)) {
+      return []
+    }
+
+    const exportName = camelCase(wordlistSlug.value)
+
+    // TODO: this only gets array ones, not Map
+    // probably will have to find another way to store and get words
+    const res = Wordlists[exportName] as string[]
+    return res
+  })
+
+  return {
+    wordlist,
+    constructedDescription,
+    words,
   }
 }
