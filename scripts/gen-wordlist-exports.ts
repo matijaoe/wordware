@@ -1,3 +1,6 @@
+import fs from 'node:fs/promises'
+import * as path from 'node:path'
+import { camelCase } from 'scule'
 import { wordlistsReference } from '~/constants/wordlist-reference'
 import type { WordlistReference } from '~/models/wordlist'
 import { parseAsDicewareMap, parseAsWordlist } from '~/utils'
@@ -8,22 +11,24 @@ const fileGeneratedComment = (localFile: string) => `
 // Do not modify this file directly`.trim()
 const exportDefaultTemplate = (content: string) => `export default ${content}`
 
-const generateWordlistExport = async (wordlist: WordlistReference) => {
-  const filePath = (filename: string) => {
-    return `public/wordlist/${filename}`
-  }
+const inputFilePath = (filename: string) => {
+  return `public/wordlist/${filename}`
+}
 
+const outputBaseDir = 'constants/generated/wordlists'
+
+const outputFilePath = (filename: string) => {
+  return `${outputBaseDir}/${filename}.ts`
+}
+
+const generateWordlistExport = async (wordlist: WordlistReference) => {
   if (!wordlist?.localFile) {
     return false
   }
 
-  const fileStr = await readFile(filePath(wordlist.localFile))
+  const fileStr = await readFile(inputFilePath(wordlist.localFile))
   if (!fileStr) {
     return false
-  }
-
-  const outputFilePath = (filename: string) => {
-    return `constants/generated/wordlists/${filename}.ts`
   }
 
   let written = false
@@ -56,14 +61,37 @@ const generateWordlistExport = async (wordlist: WordlistReference) => {
 }
 
 const generateWordlistExports = async () => {
-  for await (const wordlist of wordlistsReference) {
+  // delete all filles in the output directory
+  const oldFiles = await fs.readdir(outputBaseDir)
+  await Promise.all(oldFiles.map((file) => fs.unlink(`${outputBaseDir}/${file}`)))
+  console.log('🗑️ Deleted all previous wordlist exports')
+
+  const promises = wordlistsReference.map(async (wordlist) => {
     const written = await generateWordlistExport(wordlist)
-    if (written) {
-      console.log(`✅ Generated wordlist datasets: ${wordlist.slug}`)
-    } else {
-      console.log(`❌ Failed to generate wordlist datasets: ${wordlist.slug}`)
-    }
+    console.log(written
+      ? `✅ Generated ${wordlist.slug}.ts`
+      : `❌ Failed to generate wordlist datasets: ${wordlist.slug}`,
+    )
+    return written
+  })
+
+  await Promise.all(promises)
+
+  let importsContent = ``
+
+  const files = await fs.readdir(outputBaseDir)
+  for (const file of files) {
+    const fileNameWithoutExtension = path.parse(file).name
+    const camelCasedName = camelCase(fileNameWithoutExtension)
+    const importStatement = `export { default as ${camelCasedName} } from './${fileNameWithoutExtension}'\n`
+    importsContent += importStatement
   }
+
+  const written = await writeFile(`${outputBaseDir}/index.ts`, importsContent)
+  console.log(written
+    ? '✅ Generated index.ts file'
+    : '❌ Failed to generate index.ts',
+  )
 }
 
 await generateWordlistExports()

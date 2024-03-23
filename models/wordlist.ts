@@ -47,4 +47,4 @@ export type WordlistSlug =
   | 'orchard-street-alpha'
   | 'orchard-street-qwerty'
   | 'sts10-1password-replacement'
-  | '1password-agile'
+  | 'agile-words-1password'

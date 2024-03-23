@@ -107,7 +107,7 @@ export const wordlistsReference = [
     localFile: 'sts10-1password-replacement.txt',
   },
   {
-    slug: '1password-agile',
+    slug: 'agile-words-1password',
     name: 'Agile Words by 1Password',
     sourceFile: 'https://1password.com/txt/agwordlist.txt',
     localFile: 'agile-words-1password.txt',

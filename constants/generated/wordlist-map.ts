@@ -775,9 +775,9 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
     }
   ],
   [
-    "1password-agile",
+    "agile-words-1password",
     {
-      "slug": "1password-agile",
+      "slug": "agile-words-1password",
       "name": "Agile Words by 1Password",
       "sourceFile": "https://1password.com/txt/agwordlist.txt",
       "localFile": "agile-words-1password.txt",
