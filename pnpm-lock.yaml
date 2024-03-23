@@ -34,6 +34,9 @@ devDependencies:
   clsx:
     specifier: ^2.1.0
     version: 2.1.0
+  decimal.js-light:
+    specifier: ^2.5.1
+    version: 2.5.1
   destr:
     specifier: ^2.0.3
     version: 2.0.3
@@ -43,6 +46,9 @@ devDependencies:
   eslint-plugin-format:
     specifier: ^0.1.0
     version: 0.1.0(eslint@8.57.0)
+  magicast:
+    specifier: ^0.3.3
+    version: 0.3.3
   nuxt-icon:
     specifier: ^0.6.10
     version: 0.6.10(nuxt@3.11.1)(vite@5.2.3)(vue@3.4.21)
@@ -3646,6 +3652,10 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
+
+  /decimal.js-light@2.5.1:
+    resolution: {integrity: sha512-qIMFpTMZmny+MMIitAB6D7iVPEorVw6YQRWkvarTkT4tBeSLLiHzcwj6q0MmYSFCiVpiqPJTJEYIrpcPzVEIvg==}
+    dev: true
 
   /deep-equal@1.0.1:
     resolution: {integrity: sha512-bHtC0iYvWhyaTzvV3CZgPeZQqCOBGyGsVV7v4eevpdkLHfiSrXUdBG+qAuSz4RI70sszvjQ1QSZ98An1yNwpSw==}

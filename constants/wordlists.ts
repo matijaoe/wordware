@@ -85,7 +85,7 @@ export const wordlistsReference: WordlistReference[] = [
     },
   },
   {
-    id: 'orchard-street-alpha-dice',
+    id: 'orchard-street-alpha',
     name: 'Orchard Street Alpha Short List',
     sourceFile: 'https://raw.githubusercontent.com/sts10/orchard-street-wordlists/main/lists/orchard-street-alpha-dice.txt',
     localFile: 'orchard-street-alpha-dice.txt',
@@ -95,7 +95,7 @@ export const wordlistsReference: WordlistReference[] = [
     },
   },
   {
-    id: 'orchard-street-qwerty-dice',
+    id: 'orchard-street-qwerty',
     name: 'Orchard Street QWERTY Short List',
     sourceFile: 'https://raw.githubusercontent.com/sts10/orchard-street-wordlists/main/lists/orchard-street-qwerty-dice.txt',
     localFile: 'orchard-street-qwerty-dice.txt',

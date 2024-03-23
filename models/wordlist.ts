@@ -15,7 +15,6 @@ export type WordlistCalculated = {
   stats?: {
     words: number
     meanWordLength: number
-    avgWordLength: number
     entropyPerWord: number
     entropyPerChar: number
     longestWordChars: number
@@ -36,7 +35,7 @@ export type WordlistId =
   | 'orchard-street-long'
   | 'orchard-street-medium'
   | 'orchard-street-diceware'
-  | 'orchard-street-alpha-dice'
-  | 'orchard-street-qwerty-dice'
+  | 'orchard-street-alpha'
+  | 'orchard-street-qwerty'
   | 'sts10-1password-replacement'
   | '1password-agile'

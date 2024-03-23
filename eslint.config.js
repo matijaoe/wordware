@@ -43,7 +43,7 @@ export default antfu({
           variables: true,
         },
       ],
-      'unused-imports/no-unused-imports': 'warn',
+      // 'unused-imports/no-unused-imports': 'warn',
       'unused-imports/no-unused-vars': [
         'error',
         {

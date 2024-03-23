@@ -1,9 +1,11 @@
+import { loadFile } from 'magicast'
 import { wordlistsReference } from '~/constants/wordlists'
-import type { WordlistReference } from '~/models/wordlist'
+import type { Wordlist, WordlistId, WordlistReference } from '~/models/wordlist'
 import { parseAsDicewareMap, parseAsWordlist } from '~/utils'
 import { readFile, writeFile } from '~/utils/io'
+import * as Anal from '~/utils/analysis'
 
-export const generateWordlist = async (wordlist: WordlistReference) => {
+const generateWordlistExport = async (wordlist: WordlistReference) => {
   const filePath = (filename: string) => {
     return `public/wordlists/${filename}`
   }
@@ -47,11 +49,71 @@ export const generateWordlist = async (wordlist: WordlistReference) => {
   return written
 }
 
-for await (const wordlist of wordlistsReference) {
-  const written = await generateWordlist(wordlist)
-  if (written) {
-    console.log(`✅ Generated wordlist datasets: ${wordlist.id}`)
-  } else {
-    console.log(`❌ Failed to generate wordlist datesets: ${wordlist.id}`)
+const generateWordlistExports = async () => {
+  for await (const wordlist of wordlistsReference) {
+    const written = await generateWordlistExport(wordlist)
+    if (written) {
+      console.log(`✅ Generated wordlist datasets: ${wordlist.id}`)
+    } else {
+      console.log(`❌ Failed to generate wordlist datesets: ${wordlist.id}`)
+    }
   }
 }
+
+// await generateWordlistExports()
+
+const analyzeWordlist = async (wordlistId: WordlistId) => {
+  const filePath = (filename: string) => {
+    return `constants/generated/wordlists/${filename}`
+  }
+
+  const file = await loadFile(filePath(`${wordlistId}.ts`), {
+    range: true,
+  })
+  const defaultExport = file.exports.default as string[]
+  const words = [...defaultExport ?? []]
+
+  if (!words) {
+    return undefined
+  }
+
+  const wordCount = words.length
+
+  const longestWordExample = Anal.longestWordExample(words) ?? ''
+  const shortestWordExample = Anal.shortestWordExample(words) ?? ''
+  const shortestWordLength = shortestWordExample.length
+  const longestWordLength = longestWordExample.length
+
+  const meanWordLength = Anal.meanWordLength(words)
+  const entropyPerWord = Anal.entropyPerWord(wordCount)
+  const entropyPerCharacter = Anal.assumedEntropyPerCharacter(words, shortestWordLength)
+  const efficiencyPerCharacter = Anal.efficiencyPerCharacter(words)
+  const hasDuplicates = Anal.hasDuplicates(words)
+  const longestSharedPrefix = Anal.findLongestSharedPrefix(words)
+  const uniqueCharacterPrefix = Anal.uniqueCharacterPrefix(words)
+  const canBeShortened = Anal.canBeShortened(words)
+
+  const stats = {
+    words: wordCount,
+    meanWordLength,
+    entropyPerWord,
+    entropyPerCharacter,
+    efficiencyPerCharacter,
+    longestWordExample,
+    shortestWordExample,
+    shortestWordLength,
+    longestWordLength,
+    hasDuplicates,
+    longestSharedPrefix,
+    uniqueCharacterPrefix,
+    canBeShortened,
+
+  }
+
+  return {
+    stats,
+  }
+}
+
+const res = await analyzeWordlist('orchard-street-diceware')
+console.log(res)
