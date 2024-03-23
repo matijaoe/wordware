@@ -2,13 +2,14 @@
 withDefaults(defineProps<{
   content?: string
   delay?: number
+  disableClosingTrigger?: boolean
 }>(), {
   delay: 250,
 })
 </script>
 
 <template>
-  <TooltipProvider :delay-duration="delay">
+  <TooltipProvider :delay-duration="delay" :disable-closing-trigger="disableClosingTrigger">
     <Tooltip>
       <TooltipTrigger as-child>
         <slot />

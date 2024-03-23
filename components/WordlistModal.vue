@@ -43,7 +43,7 @@ const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() 
             </BaseTooltip>
 
             <BaseTooltip content="Local source file">
-              <NuxtLink :to="`/wordlist/${wordlist.localFile}`">
+              <NuxtLink :to="`/wordlist/${wordlist.localFile}`" target="_blank">
                 <Button as="div" variant="outline" size="icon">
                   <Icon name="ph:file-text" class="text-[1.15em]" @click.stop="" />
                 </Button>

@@ -54,6 +54,6 @@ watch(isModalOpen, (val) => {
 
 <style lang="postcss" scoped>
 .grid-wordlists {
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
 }
 </style>

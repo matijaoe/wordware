@@ -18,13 +18,13 @@ const onGoToWordlist = () => {
 </script>
 
 <template>
-  <Card class="overflow-hidden hover:bg-secondary/10 aspect-square flex flex-col">
+  <Card class="overflow-hidden hover:bg-secondary/10 aspect-[12/13] flex flex-col">
     <template v-if="wordlist">
       <CardHeader class="text-left">
         <CardTitle class="line-clamp-2">
           {{ wordlist.name }}
         </CardTitle>
-        <CardDescription class="line-clamp-3">
+        <CardDescription>
           {{ constructedDescription }}
         </CardDescription>
       </CardHeader>
