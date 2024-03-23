@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { WordlistMap } from '~/constants/generated/wordlist-map'
-import type { WordlistId } from '~/models/wordlist'
+import type { WordlistSlug } from '~/models/wordlist'
 
 const _isModalOpen = ref(false)
-const selectedList = ref<WordlistId>()
+const selectedList = ref<WordlistSlug>()
 
 const isModalOpen = computed({
   get: () => _isModalOpen.value && !!selectedList.value,
@@ -12,8 +12,8 @@ const isModalOpen = computed({
   },
 })
 
-const openListModal = (wordlistId: WordlistId) => {
-  selectedList.value = wordlistId
+const openListModal = (wordlistSlug: WordlistSlug) => {
+  selectedList.value = wordlistSlug
   isModalOpen.value = true
 }
 
@@ -37,15 +37,15 @@ watch(isModalOpen, (val) => {
 
         <WordlistModal
           v-model:open="isModalOpen"
-          :wordlist-id="selectedList"
+          :wordlist-slug="selectedList"
         />
       </div>
     </div>
     <div class="grid-wordlists grid gap-4">
-      <template v-for="[wordlistId] in WordlistMap" :key="wordlistId">
-        <button class="group" @click="openListModal(wordlistId)">
+      <template v-for="[wordlistSlug] in WordlistMap" :key="wordlistSlug">
+        <button class="group" @click="openListModal(wordlistSlug)">
           <WordlistCard
-            :wordlist-id="wordlistId"
+            :wordlist-slug="wordlistSlug"
           />
         </button>
       </template>

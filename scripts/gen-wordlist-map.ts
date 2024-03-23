@@ -1,6 +1,6 @@
 import { loadFile } from 'magicast'
 import { wordlistsReference } from '~/constants/wordlist-reference'
-import type { Wordlist, WordlistAnalysis, WordlistId, WordlistMapModel } from '~/models/wordlist'
+import type { Wordlist, WordlistAnalysis, WordlistMapModel, WordlistSlug } from '~/models/wordlist'
 import * as Anal from '~/utils/analysis'
 import { writeFile } from '~/utils/io'
 
@@ -13,7 +13,7 @@ const exportTemplate = (content: string) => `export const WordlistMap = ${conten
 const baseDir = 'constants/generated/wordlists'
 const baseOutputDir = 'constants/generated'
 
-const analyzeWordlist = async (wordlistId: WordlistId): Promise<{ sample: string[], stats: WordlistAnalysis } | undefined> => {
+const analyzeWordlist = async (wordlistId: WordlistSlug): Promise<{ sample: string[], stats: WordlistAnalysis } | undefined> => {
   const filePath = (filename: string) => `${baseDir}/${filename}`
 
   const file = await loadFile(filePath(`${wordlistId}.ts`))
@@ -66,32 +66,33 @@ const analyzeWordlist = async (wordlistId: WordlistId): Promise<{ sample: string
 
 const constructWordlistMap = async (): Promise<WordlistMapModel> => {
   console.time('analyzeWordlist')
-  const wordlistMap = new Map<WordlistId, Wordlist>()
+  const wordlistMap = new Map<WordlistSlug, Wordlist>()
+
   for await (const wordlist of wordlistsReference) {
-    const { id: wordlistId, ...refData } = wordlist
-    console.time(wordlistId)
-    const res = await analyzeWordlist(wordlistId)
+    const { slug } = wordlist
+    console.time(slug)
+    const res = await analyzeWordlist(slug)
     if (!res) {
-      console.log(`❌ Failed to analyze wordlist: ${wordlistId}, skipping...`)
-      console.timeEnd(wordlistId)
+      console.log(`❌ Failed to analyze wordlist: ${slug}, skipping...`)
+      console.timeEnd(slug)
       continue
     }
     const { sample, stats } = res
-    wordlistMap.set(wordlistId, { ...refData, sample, stats })
-    console.timeEnd(wordlistId)
+    wordlistMap.set(slug, { ...wordlist, sample, stats })
+    console.timeEnd(slug)
   }
   console.timeEnd('analyzeWordlist')
   return wordlistMap
 }
 
-const importStatement = `import type { Wordlist, WordlistId } from '~/models/wordlist'`
+const importStatement = `import type { Wordlist, WordlistSlug } from '~/models/wordlist'`
 const setupTemplate = (content: string) => `${fileGeneratedComment}\n\n${importStatement}\n\n${exportTemplate(content)}`
 
 const generateWordlistMap = async () => {
   const wordlistMap = await constructWordlistMap()
 
   const entries = [...wordlistMap.entries()]
-  const content = setupTemplate(`new Map<WordlistId, Wordlist>(${JSON.stringify(entries, null, 2)})`)
+  const content = setupTemplate(`new Map<WordlistSlug, Wordlist>(${JSON.stringify(entries, null, 2)})`)
 
   const written = await writeFile(`${baseOutputDir}/wordlist-map.ts`, content)
   if (written) {

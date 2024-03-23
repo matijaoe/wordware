@@ -10,7 +10,7 @@ const exportDefaultTemplate = (content: string) => `export default ${content}`
 
 const generateWordlistExport = async (wordlist: WordlistReference) => {
   const filePath = (filename: string) => {
-    return `public/wordlists/${filename}`
+    return `public/wordlist/${filename}`
   }
 
   if (!wordlist?.localFile) {
@@ -42,14 +42,14 @@ const generateWordlistExport = async (wordlist: WordlistReference) => {
     const mapTemplate = setupTemplate(`new Map(${JSON.stringify(entries, null, 2)})`)
 
     const res = await Promise.all([
-      writeFile(outputFilePath(wordlist.id), valuesTemplate),
-      writeFile(outputFilePath(`${wordlist.id}-diceware`), mapTemplate),
+      writeFile(outputFilePath(wordlist.slug), valuesTemplate),
+      writeFile(outputFilePath(`${wordlist.slug}-diceware`), mapTemplate),
     ])
     written = res.every(Boolean)
   } else {
     const values = parseAsWordlist(fileStr)
     const template = setupTemplate(JSON.stringify(values, null, 2))
-    written = await writeFile(outputFilePath(wordlist.id), template)
+    written = await writeFile(outputFilePath(wordlist.slug), template)
   }
 
   return written
@@ -59,9 +59,9 @@ const generateWordlistExports = async () => {
   for await (const wordlist of wordlistsReference) {
     const written = await generateWordlistExport(wordlist)
     if (written) {
-      console.log(`✅ Generated wordlist datasets: ${wordlist.id}`)
+      console.log(`✅ Generated wordlist datasets: ${wordlist.slug}`)
     } else {
-      console.log(`❌ Failed to generate wordlist datesets: ${wordlist.id}`)
+      console.log(`❌ Failed to generate wordlist datasets: ${wordlist.slug}`)
     }
   }
 }

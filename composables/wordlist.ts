@@ -1,8 +1,8 @@
 import { destr } from 'destr'
 import { WordlistMap } from '~/constants/generated/wordlist-map'
-import type { WordlistId } from '~/models/wordlist'
+import type { WordlistSlug } from '~/models/wordlist'
 
-const DEFAULT_WORDLISTS = new Set<WordlistId>([
+const DEFAULT_WORDLISTS = new Set<WordlistSlug>([
   'eff-long',
   'eff-short-1',
   'eff-short-2',
@@ -13,25 +13,25 @@ const DEFAULT_WORDLISTS = new Set<WordlistId>([
 ])
 
 export const useWordlistSelection = () => {
-  const selectedLists = useCookie<Set<WordlistId>>('wordlist:selection', {
+  const selectedLists = useCookie<Set<WordlistSlug>>('wordlist:selection', {
     default: () => DEFAULT_WORDLISTS,
     decode: (value: string) => {
-      const parsedArr = destr<WordlistId[]>(value) ?? []
-      return new Set<WordlistId>(parsedArr)
+      const parsedArr = destr<WordlistSlug[]>(value) ?? []
+      return new Set<WordlistSlug>(parsedArr)
     },
     encode: (value) => JSON.stringify(Array.from(value)),
   })
 
-  const addWordlist = (wordlistId: WordlistId) => {
-    selectedLists.value.add(wordlistId)
+  const addWordlist = (wordlistSlug: WordlistSlug) => {
+    selectedLists.value.add(wordlistSlug)
   }
 
-  const removeWordlist = (wordlistId: WordlistId) => {
-    selectedLists.value.delete(wordlistId)
+  const removeWordlist = (wordlistSlug: WordlistSlug) => {
+    selectedLists.value.delete(wordlistSlug)
   }
 
-  const checkIfWordlistSelected = (wordlistId: WordlistId) => {
-    return selectedLists.value.has(wordlistId)
+  const checkIfWordlistSelected = (wordlistSlug: WordlistSlug) => {
+    return selectedLists.value.has(wordlistSlug)
   }
 
   return {
@@ -42,10 +42,10 @@ export const useWordlistSelection = () => {
   }
 }
 
-export const useWordlist = (_wordlistId: MaybeRefOrGetter<WordlistId | undefined>) => {
-  const wordlistId = computed(() => toValue(_wordlistId))
+export const useWordlist = (_wordlistId: MaybeRefOrGetter<WordlistSlug | undefined>) => {
+  const wordlistSlug = computed(() => toValue(_wordlistId))
 
-  const wordlist = computed(() => isDefined(wordlistId) ? WordlistMap.get(wordlistId.value) : undefined)
+  const wordlist = computed(() => isDefined(wordlistSlug) ? WordlistMap.get(wordlistSlug.value) : undefined)
 
   // TODO: only temp
   const constructedDescription = computed(() => {
@@ -59,10 +59,10 @@ export const useWordlist = (_wordlistId: MaybeRefOrGetter<WordlistId | undefined
   const { checkIfWordlistSelected } = useWordlistSelection()
 
   const isWordlistSelected = computed(() => {
-    if (!isDefined(wordlistId)) {
+    if (!isDefined(wordlistSlug)) {
       return false
     }
-    return checkIfWordlistSelected(wordlistId.value)
+    return checkIfWordlistSelected(wordlistSlug.value)
   })
 
   return {

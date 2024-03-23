@@ -1,5 +1,5 @@
 export type WordlistReference = {
-  id: WordlistId
+  slug: WordlistSlug
   name: string
   description?: string
   diceware?: {
@@ -26,14 +26,14 @@ export type WordlistAnalysis = {
   hasDuplicates: boolean
 }
 
-export type Wordlist = Omit<WordlistReference, 'id'> & {
+export type Wordlist = WordlistReference & {
   sample: string[]
   stats: WordlistAnalysis
 }
 
-export type WordlistMapModel = Map<WordlistId, Wordlist>
+export type WordlistMapModel = Map<WordlistSlug, Wordlist>
 
-export type WordlistId =
+export type WordlistSlug =
   | 'eff-long'
   | 'eff-short-1'
   | 'eff-short-2'

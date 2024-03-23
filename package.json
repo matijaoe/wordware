@@ -11,7 +11,9 @@
     "shadcn:init": "npx shadcn-vue@latest init",
     "shadcn:add": "npx shadcn-vue@latest add",
     "lint": "eslint .",
-    "format": "eslint . --fix"
+    "format": "eslint . --fix",
+    "gen:lists": "npx bun ./scripts/gen-lists.js",
+    "gen:map": "npx bun ./scripts/gen-types.js"
   },
   "dependencies": {
     "nuxt": "^3.11.1",

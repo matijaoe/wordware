@@ -1,21 +1,21 @@
 <script lang="ts" setup>
-import type { WordlistId } from '~/models/wordlist'
+import type { WordlistSlug } from '~/models/wordlist'
 
 const props = defineProps<{
-  wordlistId?: WordlistId
+  wordlistSlug?: WordlistSlug
 }>()
 
 const isModalOpen = defineModel<boolean>('open', { default: false })
 
 const { addWordlist, removeWordlist } = useWordlistSelection()
 
-const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() => props.wordlistId)
+const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() => props.wordlistSlug)
 </script>
 
 <template>
   <Dialog v-model:open="isModalOpen">
     <DialogContent class="max-h-[400px] w-screen">
-      <template v-if="wordlist && wordlistId">
+      <template v-if="wordlist && wordlistSlug">
         <DialogHeader v-if="wordlist">
           <DialogTitle>{{ wordlist.name }}</DialogTitle>
           <DialogDescription>
@@ -34,18 +34,25 @@ const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() 
 
         <DialogFooter v-if="wordlist" class="mt-auto !justify-between">
           <div class="flex items-center gap-2">
-            <Button variant="outline" class="flex items-center gap-2">
-              <Icon name="ph:download-bold" class="text-[1.15em]" @click.stop="" />
-              Download
-            </Button>
-            <!-- TODO: has page reload for some reason  -->
+            <NuxtLink>
+              <Button variant="outline" size="icon" class="flex items-center gap-2">
+                <Icon name="ph:download-bold" class="text-[1.15em]" @click.stop="" />
+              </Button>
+            </NuxtLink>
+            <NuxtLink external :to="`/wordlists/${wordlistSlug}`">
+              <Button as="div" variant="outline" size="icon" class="flex items-center gap-2">
+                <Icon name="ph:download-bold" class="text-[1.15em]" @click.stop="" />
+              </Button>
+            </NuxtLink>
+
             <NuxtLink
               :to="{
                 name: 'wordlists-slug',
-                params: { slug: wordlistId }
+                params: { slug: wordlistSlug }
               }"
+              :external="false"
             >
-              <Button variant="outline" size="icon" class="flex items-center gap-2">
+              <Button as="div" variant="outline" size="icon" class="flex items-center gap-2">
                 <Icon name="ph:arrow-up-right" class="text-[1.15em]" @click.stop="" />
               </Button>
             </NuxtLink>
@@ -55,7 +62,7 @@ const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() 
             <Button
               v-if="isWordlistSelected"
               variant="destructive"
-              @click.stop="removeWordlist(wordlistId)"
+              @click.stop="removeWordlist(wordlistSlug)"
             >
               Remove from selection
             </Button>
@@ -63,7 +70,7 @@ const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() 
             <Button
               v-else
               variant="default"
-              @click.stop="addWordlist(wordlistId)"
+              @click.stop="addWordlist(wordlistSlug)"
             >
               Add to selection
             </Button>

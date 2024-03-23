@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import type { WordlistId } from '~/models/wordlist'
+import type { WordlistSlug } from '~/models/wordlist'
 
 const props = defineProps<{
-  wordlistId: WordlistId
+  wordlistSlug: WordlistSlug
 }>()
 
 const { addWordlist, removeWordlist } = useWordlistSelection()
 
-const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() => props.wordlistId)
+const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() => props.wordlistSlug)
 </script>
 
 <template>
@@ -25,12 +25,23 @@ const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() 
       <CardContent class="grow text-left">
         <div class="flex flex-col h-full mt-auto">
           <div class="flex justify-items-end gap-2 mt-auto ml-auto">
+            <NuxtLink
+              :to="{
+                name: 'wordlists-slug',
+                params: { slug: wordlistSlug }
+              }"
+            >
+              <Button as="div" variant="ghost" size="icon" class="flex items-center gap-2">
+                <Icon name="ph:arrow-up-right" class="text-[1.15em]" @click.stop="" />
+              </Button>
+            </NuxtLink>
+
             <ClientOnly>
               <BaseTooltip v-if="isWordlistSelected" content="Remove from selection">
                 <Button
                   variant="destructive"
                   size="icon"
-                  @click.stop="removeWordlist(wordlistId)"
+                  @click.stop="removeWordlist(wordlistSlug)"
                 >
                   <Icon name="ph:minus-bold" class="text-[1.15em]" />
                 </Button>
@@ -40,7 +51,7 @@ const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() 
                 <Button
                   variant="secondary"
                   size="icon"
-                  @click.stop="addWordlist(wordlistId)"
+                  @click.stop="addWordlist(wordlistSlug)"
                 >
                   <Icon name="ph:plus-bold" class="text-[1.15em]" />
                 </Button>
