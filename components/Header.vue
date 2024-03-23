@@ -6,12 +6,12 @@
   <header>
     <menu class="flex gap-3">
       <div>
-        <NuxtLink class="underline" to="/">
+        <NuxtLink class="text-muted-foreground" active-class="text-foreground" to="/">
           home
         </NuxtLink>
       </div>
       <div>
-        <NuxtLink class="underline" to="/wordlists">
+        <NuxtLink class="text-muted-foreground" active-class="text-foreground" to="/wordlists">
           wordlists
         </NuxtLink>
       </div>
