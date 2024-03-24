@@ -55,7 +55,7 @@ export const useWordlist = (_wordlistId: MaybeRefOrGetter<WordlistSlug | undefin
       return ''
     }
     const { words, entropyPerWord, entropyPerCharacter, entropyPerUniqueCharacterPrefix } = wordlist.value.stats
-    return `${words} words, ${entropyPerWord} bits of entropy per word, ${entropyPerCharacter} bits of entropy per character, ${entropyPerUniqueCharacterPrefix} bits of entropy per unique character prefix`
+    return `${words.toLocaleString()} words, ${entropyPerWord} bits of entropy per word, ${entropyPerCharacter} bits of entropy per character, ${entropyPerUniqueCharacterPrefix} bits of entropy per unique character prefix`
   })
 
   const words = computed(() => {

@@ -7,9 +7,9 @@ const props = defineProps<{
 
 const isModalOpen = defineModel<boolean>('open', { default: false })
 
-const { addWordlist, removeWordlist } = useWordlistSelection()
+const { addWordlist, removeWordlist, checkIfWordlistSelected } = useWordlistSelection()
 
-const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() => props.wordlistSlug)
+const { wordlist, constructedDescription } = useWordlist(() => props.wordlistSlug)
 </script>
 
 <template>
@@ -60,7 +60,7 @@ const { wordlist, constructedDescription, isWordlistSelected } = useWordlist(() 
           </div>
 
           <div class="flex items-center gap-2">
-            <BaseTooltip v-if="isWordlistSelected" content="Remove from selection">
+            <BaseTooltip v-if="checkIfWordlistSelected(wordlistSlug)" content="Remove from selection">
               <Button
                 variant="outline"
                 @click.stop="removeWordlist(wordlistSlug)"

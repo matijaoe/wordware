@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { WordlistSlug } from '~/models/wordlist';
+import type { WordlistSlug } from '~/models/wordlist'
 
 const selectedList = useCookie<WordlistSlug>('selected-wordlist', { default: () => 'eff-long' })
 const { selectedLists } = useWordlistSelection()
@@ -316,7 +316,7 @@ const selectAndCopyPassphrase = () => {
                 <Icon name="radix-icons:letter-case-uppercase" class="text-[1.25em]" />
               </ToggleGroupItem>
             </BaseTooltip>
-            <BaseTooltip content="Titlecase">
+            <BaseTooltip content="Title Case">
               <ToggleGroupItem value="capitalized" aria-label="Toggle title case" :variant="casing === 'capitalized' ? 'primary' : 'outline'">
                 <Icon name="radix-icons:letter-case-capitalize" class="text-[1.25em]" />
               </ToggleGroupItem>
