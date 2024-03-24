@@ -14,6 +14,7 @@ const props = defineProps<ToggleGroupRootProps & {
 }>()
 const emits = defineEmits<ToggleGroupRootEmits>()
 
+// eslint-disable-next-line vue/no-setup-props-reactivity-loss
 provide('toggleGroup', {
   variant: props.variant,
   size: props.size,

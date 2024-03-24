@@ -23,10 +23,18 @@ export function secureRandom(count: number) {
 export const generatePassphrase = (props: {
   wordlist: string[]
   count: number
+  // TODO: handle random numbers as separators
   separator?: string
   casing?: 'lower' | 'upper' | 'capitalized'
+  includeNumber?: boolean
 }) => {
-  const { wordlist, count, separator = ' ', casing = 'lower' } = props
+  const {
+    wordlist,
+    count = 5,
+    separator = ' ',
+    casing = 'lower',
+    includeNumber = false,
+  } = props
   const listLength = wordlist.length
 
   const words = []
@@ -46,7 +54,20 @@ export const generatePassphrase = (props: {
     }
     words.push(word)
   }
-  return words.join(separator)
+
+  if (includeNumber) {
+    const numberPosition = secureRandom(count)
+    const number = secureRandom(10)
+    const positions = ['start', 'end'] as const
+    const position = positions[secureRandom(positions.length)]
+    words[numberPosition] = position === 'start'
+      ? `${number}${words[numberPosition]}`
+      : `${words[numberPosition]}${number}`
+  }
+
+  // TODO: return also as array of parts so frontend could do finer styling
+  const passphrase = words.join(separator)
+  return passphrase
 }
 export const generateDicewarePassphrase = (props: {
   wordlist: string[]

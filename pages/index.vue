@@ -5,7 +5,7 @@ const selectedList = useCookie<WordlistSlug>('selected-wordlist', { default: () 
 const { selectedLists } = useWordlistSelection()
 const { words: wordlistWords, wordlist: currentWordlist } = useWordlist(selectedList)
 
-const wordCount = useCookie<number>('word-count', { default: () => 5 })
+const wordCount = useCookie<number>('passphrase:word-count', { default: () => 5 })
 const wordCountModel = computed<number[]>({
   get: () => [wordCount.value],
   set: ([value]: number[]) => {
@@ -82,29 +82,42 @@ const availableSeparators = [
 ]
 
 const separators = ref<Record<'label' | 'selectValue' | 'value', string>[]>(availableSeparators)
-const separator = useLocalStorage<string>('separator', 'dash')
+const separator = useLocalStorage<string>('passphrase:separator', 'dash')
 
 const separatorSymbol = computed(() => {
   return separators.value.find((item) => item.selectValue === separator.value)?.value
 })
 
+const includeNumber = useLocalStorage<boolean>('passphrase:include-numbers', true)
 const isHidden = ref<boolean>(false)
 
 const passphrase = ref<string>('')
 
 const passphraseHtml = computed(() => {
+  console.log(passphrase)
   if (isHidden.value) {
     return '*'.repeat(passphrase.value.length)
   }
-  return passphrase.value.replaceAll(
-    separatorSymbol.value?.toString() ?? ' ',
-    `<span class="text-fuchsia-600">${separatorSymbol.value === ' ' ? '&nbsp;' : separatorSymbol.value}</span>`,
-  )
+
+  const html = passphrase.value.split('').map((char: string) => {
+    const digit = isDigit(char)
+    if (digit) {
+      return `<span class="text-sky-500">${char}</span>`
+    }
+    if (char === separatorSymbol.value) {
+      return `<span class="text-fuchsia-500">${separatorSymbol.value === ' ' ? '&nbsp;' : separatorSymbol.value}</span>`
+    }
+    return char
+  }).join('')
+
+  console.log('finalPhrase :', html)
+
+  return html
 })
 
 type Casing = 'upper' | 'lower' | 'capitalized'
+// TODO: ls not working
 const casing = ref<Casing>('lower')
-
 watch(casing, (val) => {
   if (!val) {
     casing.value = 'lower'
@@ -117,6 +130,7 @@ const setNewPassphrase = () => {
     count: wordCount.value,
     separator: separatorSymbol.value,
     casing: casing.value,
+    includeNumber: includeNumber.value,
   })
   unselectPassphrase()
 }
@@ -159,7 +173,7 @@ const selectAndCopyPassphrase = () => {
   <div>
     <div class="w-fullmt-[10vh]">
       <h2 class="text-4xl font-mono leading-snug text-center text-balance mb-12 max-w-4xl mx-auto ">
-        Only passphrase generator you'll ever need
+        Sleek passphrase generator
       </h2>
 
       <button
@@ -259,10 +273,15 @@ const selectAndCopyPassphrase = () => {
           </ToggleGroup>
         </div>
 
-        <div>
+        <div class="flex gap-1">
           <BaseTooltip :content="isHidden ? 'Show' : 'Hide'">
             <Toggle v-model="isHidden" variant="outline" aria-label="Hide passphrase" @click="isHidden = !isHidden">
               <Icon :name=" isHidden ? 'ph:eye' : 'ph:eye-slash'" class="text-[1.25em]" />
+            </Toggle>
+          </BaseTooltip>
+          <BaseTooltip content="Include number">
+            <Toggle v-model="includeNumber" :variant="includeNumber ? 'secondary' : 'outline'" aria-label="Include number" @click="includeNumber = !includeNumber">
+              <Icon name="ph:number-nine" class="text-[1.25em]" />
             </Toggle>
           </BaseTooltip>
         </div>
