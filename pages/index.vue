@@ -3,9 +3,9 @@ import type { WordlistSlug } from '~/models/wordlist'
 
 const selectedList = useCookie<WordlistSlug>('selected-wordlist', { default: () => 'eff-long' })
 const { selectedLists } = useWordlistSelection()
-const { words: currentWordlist } = useWordlist(selectedList)
+const { words: wordlistWords, wordlist: currentWordlist } = useWordlist(selectedList)
 
-const wordCount = ref<number>(5)
+const wordCount = useCookie<number>('word-count', { default: () => 5 })
 const wordCountModel = computed<number[]>({
   get: () => [wordCount.value],
   set: ([value]: number[]) => {
@@ -82,13 +82,12 @@ const availableSeparators = [
 ]
 
 const separators = ref<Record<'label' | 'selectValue' | 'value', string>[]>(availableSeparators)
-const separator = ref<string>('dash')
+const separator = useLocalStorage<string>('separator', 'dash')
 
 const separatorSymbol = computed(() => {
   return separators.value.find((item) => item.selectValue === separator.value)?.value
 })
 
-const isCapitalized = ref<boolean>(false)
 const isHidden = ref<boolean>(false)
 
 const passphrase = ref<string>('')
@@ -103,13 +102,18 @@ const passphraseHtml = computed(() => {
   )
 })
 
-const casing = computed<'upper' | 'lower' | 'capitalized'>(() => {
-  return isCapitalized.value ? 'capitalized' : 'lower'
+type Casing = 'upper' | 'lower' | 'capitalized'
+const casing = ref<Casing>('lower')
+
+watch(casing, (val) => {
+  if (!val) {
+    casing.value = 'lower'
+  }
 })
 
 const setNewPassphrase = () => {
   passphrase.value = generatePassphrase({
-    wordlist: currentWordlist.value,
+    wordlist: wordlistWords.value,
     count: wordCount.value,
     separator: separatorSymbol.value,
     casing: casing.value,
@@ -154,12 +158,12 @@ const selectAndCopyPassphrase = () => {
 <template>
   <div>
     <div class="w-fullmt-[10vh]">
-      <h2 class="text-4xl font-mono leading-snug text-center text-balance mb-12 max-w-2xl mx-auto ">
+      <h2 class="text-4xl font-mono leading-snug text-center text-balance mb-12 max-w-4xl mx-auto ">
         Only passphrase generator you'll ever need
       </h2>
 
       <button
-        class="block w-full max-w-5xl mx-auto"
+        class="block w-full max-w-4xl mx-auto"
         @click="selectAndCopyPassphrase"
       >
         <!-- TODO: text balance not working with span for each char, or v-html -->
@@ -170,62 +174,93 @@ const selectAndCopyPassphrase = () => {
         />
       </button>
 
-      <div class="mt-4 grid grid-cols-4 gap-4 items-center max-w-xl mx-auto ">
-        <Button variant="outline" size="default" @click="selectAndCopyPassphrase">
-          copy
-        </Button>
-        <div class="col-span-2">
+      <div class="mt-4 grid grid-cols-4 gap-x-4 gap-y-5 items-end max-w-2xl mx-auto ">
+        <div class="col-span-2 flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <Label class="text-sm">Words</Label>
+            <Label class="text-sm">{{ wordCount }}</Label>
+          </div>
+
           <Slider
             v-model="wordCountModel"
-            :max="24"
+            :max="12"
             :min="3"
             :step="1"
           />
         </div>
-        <Button variant="default" size="default" @click="setNewPassphrase">
-          generate
+
+        <Button variant="outline" size="default" @click="selectAndCopyPassphrase">
+          Copy
         </Button>
 
-        <div class="col-span-2">
-          <Select v-model="selectedList" class="text-left">
-            <SelectTrigger>
-              <SelectValue placeholder="Select a list" />
+        <Button variant="default" size="default" @click="setNewPassphrase">
+          Generate new
+        </Button>
+
+        <div class="flex flex-col gap-1.5">
+          <Label>Separator</Label>
+          <Select v-model="separator">
+            <SelectTrigger class="text-left">
+              <SelectValue placeholder="Separator" />
             </SelectTrigger>
             <SelectContent>
-              <WordlistSelectItem
-                v-for="list in selectedLists"
-                :key="list"
-                class="w-full"
-                :value="list"
-              />
+              <SelectItem
+                v-for="item in separators"
+                :key="item.selectValue"
+                class="text-left"
+                :value="item.selectValue"
+              >
+                <span class="w-full">{{ item.label }}</span>
+                <span class="text-muted-foreground ml-1 font-mono">({{ item.value }})</span>
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        <Select v-model="separator" class="text-left">
-          <SelectTrigger>
-            <SelectValue placeholder="Pick a separator" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem
-              v-for="item in separators"
-              :key="item.selectValue"
-              :value="item.selectValue"
-            >
-              <span class="w-full">{{ item.label }}</span>
-              <span class="text-muted-foreground ml-1 font-mono">({{ item.value }})</span>
-            </SelectItem>
-          </SelectContent>
-        </Select>
+        <div class="col-span-2">
+          <div class="flex flex-col gap-1.5">
+            <Label>Wordlist</Label>
+            <Select v-model="selectedList" class="text-left">
+              <SelectTrigger>
+                <SelectValue placeholder="Select a list">
+                  {{ currentWordlist?.name }}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <WordlistSelectItem
+                  v-for="list in selectedLists"
+                  :key="list"
+                  class="w-full"
+                  :value="list"
+                />
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
-        <div class="grid grid-cols-2 gap-4">
-          <BaseTooltip content="Capitalize case">
-            <Toggle v-model="isCapitalized" variant="outline" class="flex items-center gap-2" aria-label="Toggle title case" @click="isCapitalized = !isCapitalized">
-              <Icon name="ph:text-aa" class="text-[1.25em]" />
-            </Toggle>
-          </BaseTooltip>
+        <div class="flex flex-col items-start gap-2">
+          <Label>Case</Label>
+          <ToggleGroup v-model="casing" class="mx-0" type="single">
+            <BaseTooltip content="lowercase">
+              <ToggleGroupItem value="lower" aria-label="Toggle lowercase" :variant="casing === 'lower' ? 'primary' : 'outline'">
+                <Icon name="radix-icons:letter-case-lowercase" class="text-[1.25em]" />
+              </ToggleGroupItem>
+            </BaseTooltip>
+            <BaseTooltip content="UPPERCASE">
+              <ToggleGroupItem value="upper" aria-label="Toggle uppercase" :variant="casing === 'upper' ? 'primary' : 'outline'">
+                <Icon name="radix-icons:letter-case-uppercase" class="text-[1.25em]" />
+              </ToggleGroupItem>
+            </BaseTooltip>
+            <BaseTooltip content="Titlecase">
+              <ToggleGroupItem value="capitalized" aria-label="Toggle title case" :variant="casing === 'capitalized' ? 'primary' : 'outline'">
+                <Icon name="radix-icons:letter-case-capitalize" class="text-[1.25em]" />
+              </ToggleGroupItem>
+            </BaseTooltip>
+          </ToggleGroup>
+        </div>
 
-          <BaseTooltip content="Hide passphrase">
+        <div>
+          <BaseTooltip :content="isHidden ? 'Show' : 'Hide'">
             <Toggle v-model="isHidden" variant="outline" aria-label="Hide passphrase" @click="isHidden = !isHidden">
               <Icon :name=" isHidden ? 'ph:eye' : 'ph:eye-slash'" class="text-[1.25em]" />
             </Toggle>

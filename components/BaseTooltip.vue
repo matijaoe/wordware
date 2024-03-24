@@ -4,7 +4,7 @@ withDefaults(defineProps<{
   delay?: number
   disableClosingTrigger?: boolean
 }>(), {
-  delay: 250,
+  delay: 0,
 })
 </script>
 
