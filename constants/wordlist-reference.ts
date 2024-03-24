@@ -3,7 +3,7 @@ import type { WordlistReference } from '~/models/wordlist'
 export const wordlistsReference = [
   {
     slug: 'eff-long',
-    name: 'EFF\'s Long Wordlist',
+    name: 'EFF Long Wordlist',
     description: 'Curated by the Electronic Frontier Foundation (EFF) for generating secure passphrases using the Diceware method. Each word is selected to ensure maximum entropy.',
     sourceFile: 'https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt',
     localFile: 'eff_large_wordlist.txt',
@@ -13,7 +13,7 @@ export const wordlistsReference = [
   },
   {
     slug: 'eff-short-1',
-    name: 'EFF\'s Short Wordlist #1',
+    name: 'EFF Short Wordlist #1',
     description: 'A compact wordlist provided by the Electronic Frontier Foundation (EFF) for creating strong and secure passphrases through the Diceware method.',
     sourceFile: 'https://www.eff.org/files/2016/09/08/eff_short_wordlist_1.txt',
     localFile: 'eff_short_wordlist_1.txt',
@@ -23,7 +23,7 @@ export const wordlistsReference = [
   },
   {
     slug: 'eff-short-2',
-    name: 'EFF\'s Short Wordlist #2',
+    name: 'EFF Short Wordlist #2',
     description: 'Another concise collection of words by the Electronic Frontier Foundation (EFF) intended for generating strong and memorable passphrases using the Diceware method.',
     sourceFile: 'https://www.eff.org/files/2016/09/08/eff_short_wordlist_2_0.txt',
     localFile: 'eff_short_wordlist_2.txt',
@@ -34,7 +34,7 @@ export const wordlistsReference = [
   {
     slug: 'reinhold-diceware',
     name: 'Reinhold Diceware Wordlist',
-    description: 'Compiled by Arnold G. Reinhold for secure passphrase generation using the Diceware method.',
+    description: 'The original and still very popular list for using dice to create passphrases.',
     sourceFile: 'https://theworld.com/~reinhold/diceware.wordlist.asc',
     localFile: 'beale-wordlist.txt',
     diceware: {
@@ -117,5 +117,17 @@ export const wordlistsReference = [
     name: 'Agile Words by 1Password',
     sourceFile: 'https://1password.com/txt/agwordlist.txt',
     localFile: 'agile-words-1password.txt',
+  },
+  {
+    slug: 'biglou-bad-words',
+    name: 'Biglou Bad Words Wordlist',
+    sourceFile: 'https://www.cs.cmu.edu/~biglou/resources/bad-words.txt',
+    localFile: 'biglou-bad-words.txt',
+  },
+  {
+    slug: 'securedrop-wordlist',
+    name: 'SecureDrop Wordlist',
+    sourceFile: 'https://raw.githubusercontent.com/freedomofpress/securedrop/develop/securedrop/wordlists/en.txt',
+    localFile: 'securedrop-en.txt',
   },
 ] satisfies WordlistReference[]

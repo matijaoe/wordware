@@ -12,8 +12,8 @@
     "shadcn:add": "npx shadcn-vue@latest add",
     "lint": "eslint .",
     "format": "eslint . --fix",
-    "gen:lists": "npx bun ./scripts/gen-lists.js",
-    "gen:map": "npx bun ./scripts/gen-types.js"
+    "gen:exports": "bun ./scripts/gen-wordlist-exports.ts",
+    "gen:map": "bun ./scripts/gen-wordlist-map.ts"
   },
   "dependencies": {
     "nuxt": "^3.11.1",

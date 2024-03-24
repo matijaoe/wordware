@@ -4,6 +4,7 @@
 import effShort2Diceware from './eff-short-2-diceware'
 import effShort2 from './eff-short-2'
 import agileWords1password from './agile-words-1password'
+import biglouBadWords from './biglou-bad-words'
 import orchardStreetAlphaDiceware from './orchard-street-alpha-diceware'
 import orchardStreetDicewareDiceware from './orchard-street-diceware-diceware'
 import orchardStreetDiceware from './orchard-street-diceware'
@@ -11,6 +12,7 @@ import orchardStreetAlpha from './orchard-street-alpha'
 import orchardStreetQwertyDiceware from './orchard-street-qwerty-diceware'
 import effLong from './eff-long'
 import sts101passwordReplacement from './sts10-1password-replacement'
+import securedropWordlist from './securedrop-wordlist'
 import effShort1Diceware from './eff-short-1-diceware'
 import bip39En from './bip39-en'
 import slip39En from './slip39-en'
@@ -24,30 +26,31 @@ import reinholdDicewareDiceware from './reinhold-diceware-diceware'
 import effLongDiceware from './eff-long-diceware'
 import effShort1 from './eff-short-1'
 
-export type WordlistExport = 'effShort2Diceware' | 'effShort2' | 'agileWords1password' | 'orchardStreetAlphaDiceware' | 'orchardStreetDicewareDiceware' | 'orchardStreetDiceware' | 'orchardStreetAlpha' | 'orchardStreetQwertyDiceware' | 'effLong' | 'sts101passwordReplacement' | 'effShort1Diceware' | 'bip39En' | 'slip39En' | 'bealeDiceware' | 'orchardStreetQwerty' | 'orchardStreetLong' | 'orchardStreetMedium' | 'beale' | 'reinholdDiceware' | 'reinholdDicewareDiceware' | 'effLongDiceware' | 'effShort1'
+export type WordlistExport = 'effShort2Diceware' | 'effShort2' | 'agileWords1password' | 'biglouBadWords' | 'orchardStreetAlphaDiceware' | 'orchardStreetDicewareDiceware' | 'orchardStreetDiceware' | 'orchardStreetAlpha' | 'orchardStreetQwertyDiceware' | 'effLong' | 'sts101passwordReplacement' | 'securedropWordlist' | 'effShort1Diceware' | 'bip39En' | 'slip39En' | 'bealeDiceware' | 'orchardStreetQwerty' | 'orchardStreetLong' | 'orchardStreetMedium' | 'beale' | 'reinholdDiceware' | 'reinholdDicewareDiceware' | 'effLongDiceware' | 'effShort1'
 
 export const Wordlists = {
-  effShort2Diceware,
-  effShort2,
-  agileWords1password,
-  orchardStreetAlphaDiceware,
-  orchardStreetDicewareDiceware,
-  orchardStreetDiceware,
-  orchardStreetAlpha,
-  orchardStreetQwertyDiceware,
-  effLong,
-  sts101passwordReplacement,
-  effShort1Diceware,
-  bip39En,
-  slip39En,
-  bealeDiceware,
-  orchardStreetQwerty,
-  orchardStreetLong,
-  orchardStreetMedium,
-  beale,
-  reinholdDiceware,
-  reinholdDicewareDiceware,
-  effLongDiceware,
-  effShort1,
-} as Record<WordlistExport, any>
-// TODO: figure out how to handle array vs map exports
+	effShort2Diceware,
+	effShort2,
+	agileWords1password,
+	biglouBadWords,
+	orchardStreetAlphaDiceware,
+	orchardStreetDicewareDiceware,
+	orchardStreetDiceware,
+	orchardStreetAlpha,
+	orchardStreetQwertyDiceware,
+	effLong,
+	sts101passwordReplacement,
+	securedropWordlist,
+	effShort1Diceware,
+	bip39En,
+	slip39En,
+	bealeDiceware,
+	orchardStreetQwerty,
+	orchardStreetLong,
+	orchardStreetMedium,
+	beale,
+	reinholdDiceware,
+	reinholdDicewareDiceware,
+	effLongDiceware,
+	effShort1,
+}
