@@ -16,85 +16,126 @@ const wordCountModel = computed<number[]>({
 const availableSeparators = [
   {
     label: 'space',
-    selectValue: 'space',
-    value: ' ',
+    value: 'space',
+    symbol: ' ',
   },
   {
     label: 'dash',
-    selectValue: 'dash',
-    value: '-',
+    value: 'dash',
+    symbol: '-',
   },
   {
     label: 'underscore',
-    selectValue: 'underscore',
-    value: '_',
+    value: 'underscore',
+    symbol: '_',
   },
   {
     label: 'period',
-    selectValue: 'period',
-    value: '.',
+    value: 'period',
+    symbol: '.',
   },
   {
     label: 'comma',
-    selectValue: 'comma',
-    value: ',',
+    value: 'comma',
+    symbol: ',',
   },
   {
     label: 'semicolon',
-    selectValue: 'semicolon',
-    value: ';',
+    value: 'semicolon',
+    symbol: ';',
   },
   {
     label: 'forward slash',
-    selectValue: 'forward-slash',
-    value: '/',
+    value: 'forward-slash',
+    symbol: '/',
   },
   {
     label: 'at',
-    selectValue: 'at',
-    value: '@',
+    value: 'at',
+    symbol: '@',
   },
   {
     label: 'tilde',
-    selectValue: 'tilde',
-    value: '~',
+    value: 'tilde',
+    symbol: '~',
   },
   {
     label: 'question mark',
-    selectValue: 'question-mark',
-    value: '?',
+    value: 'question-mark',
+    symbol: '?',
   },
   {
-    label: 'tilde',
-    selectValue: 'tilde',
-    value: '~',
+    label: 'exclamation mark',
+    value: 'exclamation-mark',
+    symbol: '!',
   },
   {
     label: 'plus',
-    selectValue: 'plus',
-    value: '+',
+    value: 'plus',
+    symbol: '+',
+  },
+  {
+    label: 'equals',
+    value: 'equals',
+    symbol: '=',
+  },
+  {
+    label: 'ampersand',
+    value: 'ampersand',
+    symbol: '&',
+  },
+  {
+    label: 'percent',
+    value: 'percent',
+    symbol: '%',
+  },
+  {
+    label: 'hash',
+    value: 'hash',
+    symbol: '#',
+  },
+  {
+    label: 'star',
+    value: 'star',
+    symbol: '*',
   },
   {
     label: 'none',
-    selectValue: 'none',
-    value: '',
+    value: 'none',
+    symbol: '',
   },
-]
+  {
+    label: 'numbers',
+    value: '<RANDOM_NUMBERS>',
+    symbol: 'XX',
+  },
+] as const
+type SeparatorValue = typeof availableSeparators[number]['value']
 
-const separators = ref<Record<'label' | 'selectValue' | 'value', string>[]>(availableSeparators)
-const separator = useLocalStorage<string>('passphrase:separator', 'dash')
-
-const separatorSymbol = computed(() => {
-  return separators.value.find((item) => item.selectValue === separator.value)?.value
+// TODO: rework separators, make them type safe, allow custom separator values, mark custom non-number non-symbol separators as diff color, to diff from regular word
+const separators = ref<{ label: string, value: SeparatorValue, symbol: string }[]>([...availableSeparators])
+const separator = useLocalStorage<SeparatorValue>('passphrase:separator', 'dash')
+const selectedSeparator = computed(() => {
+  return separators.value.find((item) => item.value === separator.value)
 })
 
-const includeNumber = useLocalStorage<boolean>('passphrase:include-numbers', true)
+const isSeparatorRandomNumbers = computed(() => {
+  return separator.value === '<RANDOM_NUMBERS>'
+})
+
+// Extra settings toggles
+const includeNumber = useLocalStorage<boolean>('passphrase:include-number', true)
 const isHidden = ref<boolean>(false)
 
-const passphrase = ref<string>('')
+// TODO: unselect and disable includeNumber toggle when random numbers as separator selected
+watch(separator, (val) => {
+  if (val === '<RANDOM_NUMBERS>') {
+    includeNumber.value = false
+  }
+}, { immediate: true })
 
+const passphrase = ref<string>('')
 const passphraseHtml = computed(() => {
-  console.log(passphrase)
   if (isHidden.value) {
     return '*'.repeat(passphrase.value.length)
   }
@@ -104,13 +145,16 @@ const passphraseHtml = computed(() => {
     if (digit) {
       return `<span class="text-sky-500">${char}</span>`
     }
-    if (char === separatorSymbol.value) {
-      return `<span class="text-fuchsia-500">${separatorSymbol.value === ' ' ? '&nbsp;' : separatorSymbol.value}</span>`
+    if (!isDefined(selectedSeparator)) {
+      return char
+    }
+
+    const sep = selectedSeparator.value
+    if (sep.value !== '<RANDOM_NUMBERS>' && char === sep.symbol) {
+      return `<span class="text-fuchsia-500">${sep.value === 'space' ? '&nbsp;' : char}</span>`
     }
     return char
   }).join('')
-
-  console.log('finalPhrase :', html)
 
   return html
 })
@@ -128,7 +172,8 @@ const setNewPassphrase = () => {
   passphrase.value = generatePassphrase({
     wordlist: wordlistWords.value,
     count: wordCount.value,
-    separator: separatorSymbol.value,
+    separator: selectedSeparator.value?.symbol,
+    randomNumbersAsSeparator: isSeparatorRandomNumbers.value,
     casing: casing.value,
     includeNumber: includeNumber.value,
   })
@@ -220,12 +265,12 @@ const selectAndCopyPassphrase = () => {
             <SelectContent>
               <SelectItem
                 v-for="item in separators"
-                :key="item.selectValue"
+                :key="item.value"
                 class="text-left"
-                :value="item.selectValue"
+                :value="item.value"
               >
                 <span class="w-full">{{ item.label }}</span>
-                <span class="text-muted-foreground ml-1 font-mono">({{ item.value }})</span>
+                <span class="text-muted-foreground ml-1 font-mono">({{ item.symbol }})</span>
               </SelectItem>
             </SelectContent>
           </Select>
@@ -280,7 +325,14 @@ const selectAndCopyPassphrase = () => {
             </Toggle>
           </BaseTooltip>
           <BaseTooltip content="Include number">
-            <Toggle v-model="includeNumber" :variant="includeNumber ? 'secondary' : 'outline'" aria-label="Include number" @click="includeNumber = !includeNumber">
+            <!-- TODO: disable not working live -->
+            <Toggle
+              v-model="includeNumber"
+              :variant="includeNumber ? 'secondary' : 'outline'"
+              aria-label="Include number"
+              :disabled="isSeparatorRandomNumbers"
+              @click="includeNumber = !includeNumber"
+            >
               <Icon name="ph:number-nine" class="text-[1.25em]" />
             </Toggle>
           </BaseTooltip>

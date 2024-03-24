@@ -25,13 +25,15 @@ export const generatePassphrase = (props: {
   count: number
   // TODO: handle random numbers as separators
   separator?: string
-  casing?: 'lower' | 'upper' | 'capitalized'
+  randomNumbersAsSeparator?: boolean // TODO: allow character length?
+  casing?: 'lower' | 'upper' | 'capitalized' // TODO: add mixed
   includeNumber?: boolean
 }) => {
   const {
     wordlist,
     count = 5,
     separator = ' ',
+    randomNumbersAsSeparator,
     casing = 'lower',
     includeNumber = false,
   } = props
@@ -65,6 +67,23 @@ export const generatePassphrase = (props: {
       : `${words[numberPosition]}${number}`
   }
 
+  if (randomNumbersAsSeparator) {
+    const passphraseParts = []
+    // loop over words and add random number as separator
+    for (let i = 0; i < count; i++) {
+      passphraseParts.push(words[i])
+      const isLastWord = i === count - 1
+
+      if (!isLastWord) {
+        // TODO: improve on this
+        const EXACT_DIGITS = 2
+        const numberSeparator = generateExactDigitsNumber(EXACT_DIGITS)
+        passphraseParts.push(numberSeparator)
+      }
+    }
+    return passphraseParts.join('')
+  }
+
   // TODO: return also as array of parts so frontend could do finer styling
   const passphrase = words.join(separator)
   return passphrase
@@ -78,6 +97,15 @@ export const generateDicewarePassphrase = (props: {
   const listLength = wordlist.length
 
   // TODO
+}
+
+const generateExactDigitsNumber = (digits: number) => {
+  const digitsArr: number[] = []
+  for (let j = 0; j < digits; j++) {
+    const number = secureRandom(10)
+    digitsArr.push(number)
+  }
+  return digitsArr.join('')
 }
 
 // Returns an array of objects of length numWords (default 1).
