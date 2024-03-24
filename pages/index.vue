@@ -103,6 +103,16 @@ const passphraseHtml = computed(() => {
   return html
 })
 
+const calculatedEntropy = computed(() => {
+  // TODO: only taking words into consideration for now
+  if (!isDefined(currentWordlist) || !isDefined(passphrase)) {
+    return undefined
+  }
+  const entropyPerWord = currentWordlist.value?.stats.entropyPerWord
+  const entropy = entropyPerWord * wordCount.value
+  return entropy.toFixed(2)
+})
+
 // TODO: some wordlist could have mixed casing already, make the default be keep case, and add mixed case option as well
 type Casing = 'keep' | 'upper' | 'lower' | 'capitalized'
 // TODO: ls not working
@@ -350,6 +360,8 @@ whenever(c, () => {
             </Toggle>
           </BaseTooltip>
         </div>
+
+        <Label v-if="isDefined(calculatedEntropy)">Entropy: {{ calculatedEntropy }} bit</Label>
       </div>
     </div>
   </div>
