@@ -17,8 +17,8 @@ const openListModal = (wordlistSlug: WordlistSlug) => {
   isModalOpen.value = true
 }
 
-watch(isModalOpen, (val) => {
-  if (!val) {
+watch(isModalOpen, (open) => {
+  if (!open) {
     // TODO: do I have to wait for animation to finish?
     setTimeout(() => {
       selectedList.value = undefined
@@ -54,6 +54,6 @@ watch(isModalOpen, (val) => {
 
 <style lang="postcss" scoped>
 .grid-wordlists {
-  grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
 }
 </style>

@@ -72,3 +72,4 @@ export function max<T>(
 }
 
 export const isDigit = (char: string) => /\d/.test(char)
+export const isLetter = (char: string) => /[a-zA-Z]/.test(char)

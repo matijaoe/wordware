@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import type { WordlistSlug } from '~/models/wordlist'
+import type { WordlistSlug } from '~/models/wordlist';
 
 const selectedList = useCookie<WordlistSlug>('selected-wordlist', { default: () => 'eff-long' })
 const { selectedLists } = useWordlistSelection()
 const { words: wordlistWords, wordlist: currentWordlist } = useWordlist(selectedList)
 
-const wordCount = useCookie<number>('passphrase:word-count', { default: () => 5 })
+const wordCount = useCookie<number>('passphrase:word-count', { default: () => 6 })
 const wordCountModel = computed<number[]>({
   get: () => [wordCount.value],
   set: ([value]: number[]) => {
@@ -149,9 +149,15 @@ const passphraseHtml = computed(() => {
       return char
     }
 
+    // handle all symbols the same, no matter if sepertor or not?
+
+    const isSymbol = (char: string) => {
+      return !isDigit(char) && !isLetter(char)
+    }
+
     const sep = selectedSeparator.value
-    if (sep.value !== '<RANDOM_NUMBERS>' && char === sep.symbol) {
-      return `<span class="text-fuchsia-500">${sep.value === 'space' ? '&nbsp;' : char}</span>`
+    if (sep.value !== '<RANDOM_NUMBERS>' && isSymbol(char)) {
+      return `<span class="text-fuchsia-500">${char === ' ' ? '&nbsp;' : char}</span>`
     }
     return char
   }).join('')
@@ -242,7 +248,7 @@ const selectAndCopyPassphrase = () => {
 
           <Slider
             v-model="wordCountModel"
-            :max="12"
+            :max="15"
             :min="3"
             :step="1"
           />

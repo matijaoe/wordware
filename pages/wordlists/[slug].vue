@@ -19,6 +19,40 @@ const { wordlist, constructedDescription, words } = useWordlist(() => route.para
         <p class="text-muted-foreground">
           {{ constructedDescription }}
         </p>
+
+        <div class="mt-6 space-y-1">
+          <p class="flex gap-2">
+            <span class="text-muted-foreground">List length:</span>{{ wordlist.stats.words.toLocaleString() }} words
+          </p>
+          <p class="flex gap-2">
+            <!-- TODO: format number instead of toFixed -->
+            <span class="text-muted-foreground">Mean word length:</span>{{ wordlist.stats.meanWordLength.toFixed(2) }} characters
+          </p>
+          <p class="flex gap-2">
+            <span class="text-muted-foreground">Entropy per word:</span>{{ wordlist.stats.entropyPerWord }} bits
+          </p>
+          <p class="flex gap-2">
+            <span class="text-muted-foreground">Entropy per character (mean):</span>{{ wordlist.stats.entropyPerCharacter }} bits
+          </p>
+          <p class="flex gap-2">
+            <span class="text-muted-foreground">Entropy per character (unique prefix):</span>{{ wordlist.stats.entropyPerUniqueCharacterPrefix }} bits
+          </p>
+          <p class="flex gap-2">
+            <span class="text-muted-foreground">Efficiency per character (mean):</span>{{ wordlist.stats.efficiencyPerCharacter }} bits
+          </p>
+          <p class="flex gap-2">
+            <span class="text-muted-foreground">Shortest word:</span>{{ wordlist.stats.shortestWordLength }} characters<span class="text-muted-foreground">("{{ wordlist.stats.shortestWordExample }}")</span>
+          </p>
+          <p class="flex gap-2">
+            <span class="text-muted-foreground">Longest word:</span>{{ wordlist.stats.longestWordLength }} characters<span class="text-muted-foreground">("{{ wordlist.stats.longestWordExample }}")</span>
+          </p>
+          <p class="flex gap-2">
+            <span class="text-muted-foreground">Longest shared prefix:</span>{{ wordlist.stats.longestSharedPrefix }} characters
+          </p>
+          <p class="flex gap-2">
+            <span class="text-muted-foreground">Unique prefix:</span> {{ wordlist.stats.canBeShortened ? `${wordlist.stats.uniqueCharacterPrefix} characters` : 'no' }}
+          </p>
+        </div>
       </div>
     </div>
 
