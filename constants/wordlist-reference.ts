@@ -4,6 +4,7 @@ export const wordlistsReference = [
   {
     slug: 'eff-long',
     name: 'EFF\'s Long Wordlist',
+    description: 'Curated by the Electronic Frontier Foundation (EFF) for generating secure passphrases using the Diceware method. Each word is selected to ensure maximum entropy.',
     sourceFile: 'https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt',
     localFile: 'eff_large_wordlist.txt',
     diceware: {
@@ -13,6 +14,7 @@ export const wordlistsReference = [
   {
     slug: 'eff-short-1',
     name: 'EFF\'s Short Wordlist #1',
+    description: 'A compact wordlist provided by the Electronic Frontier Foundation (EFF) for creating strong and secure passphrases through the Diceware method.',
     sourceFile: 'https://www.eff.org/files/2016/09/08/eff_short_wordlist_1.txt',
     localFile: 'eff_short_wordlist_1.txt',
     diceware: {
@@ -22,6 +24,7 @@ export const wordlistsReference = [
   {
     slug: 'eff-short-2',
     name: 'EFF\'s Short Wordlist #2',
+    description: 'Another concise collection of words by the Electronic Frontier Foundation (EFF) intended for generating strong and memorable passphrases using the Diceware method.',
     sourceFile: 'https://www.eff.org/files/2016/09/08/eff_short_wordlist_2_0.txt',
     localFile: 'eff_short_wordlist_2.txt',
     diceware: {
@@ -31,6 +34,7 @@ export const wordlistsReference = [
   {
     slug: 'reinhold-diceware',
     name: 'Reinhold Diceware Wordlist',
+    description: 'Compiled by Arnold G. Reinhold for secure passphrase generation using the Diceware method.',
     sourceFile: 'https://theworld.com/~reinhold/diceware.wordlist.asc',
     localFile: 'beale-wordlist.txt',
     diceware: {
@@ -40,6 +44,7 @@ export const wordlistsReference = [
   {
     slug: 'beale',
     name: 'Beale Wordlist',
+    description: 'Compiled by Arnold G. Reinhold for secure passphrase generation using the Diceware method.',
     sourceFile: 'https://theworld.com/~reinhold/beale.wordlist.asc',
     localFile: 'reinhold-diceware-wordlist.txt',
     diceware: {
@@ -49,6 +54,7 @@ export const wordlistsReference = [
   {
     slug: 'bip39-en',
     name: 'BIP-39 Wordlist',
+    description: 'A standardized set of words for the recovery and backup of a bitcoin or cryptocurrency wallet, unique within the first four letters of each word.',
     sourceFile: 'https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt',
     localFile: 'bip-39-english.txt',
   },

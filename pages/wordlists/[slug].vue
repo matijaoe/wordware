@@ -12,46 +12,103 @@ const { wordlist, constructedDescription, words } = useWordlist(() => route.para
   <NuxtLayout name="half">
     <div v-if="wordlist">
       <div>
-        <h1 class="text-4xl mb-3">
-          {{ wordlist.name }}
-        </h1>
+        <div class="flex items-center gap-5 mb-3">
+          <h1 class="text-4xl">
+            {{ wordlist.name }}
+          </h1>
+
+          <div v-if="wordlist.diceware" class="flex items-center gap-2">
+            <Badge>
+              Diceware
+            </Badge>
+
+            <Badge v-if="wordlist.diceware.rollsPerWord === 3" class="flex items-center gap-1">
+              3 dice <Icon name="ph:dice-three-bold" class="text-lg" />
+            </Badge>
+            <Badge v-else-if="wordlist.diceware.rollsPerWord === 4" class="flex items-center gap-1">
+              4 dice <Icon name="ph:dice-four-bold" class="text-lg" />
+            </Badge>
+            <Badge v-else-if="wordlist.diceware.rollsPerWord === 5" class="flex items-center gap-1">
+              5 dice <Icon name="ph:dice-five-bold" class="text-lg" />
+            </Badge>
+          </div>
+        </div>
 
         <p class="text-muted-foreground">
           {{ constructedDescription }}
         </p>
 
-        <div class="mt-6 space-y-1">
-          <p class="flex gap-2">
-            <span class="text-muted-foreground">List length:</span>{{ wordlist.stats.words.toLocaleString() }} words
-          </p>
-          <p class="flex gap-2">
-            <!-- TODO: format number instead of toFixed -->
-            <span class="text-muted-foreground">Mean word length:</span>{{ wordlist.stats.meanWordLength.toFixed(2) }} characters
-          </p>
-          <p class="flex gap-2">
-            <span class="text-muted-foreground">Entropy per word:</span>{{ wordlist.stats.entropyPerWord }} bits
-          </p>
-          <p class="flex gap-2">
-            <span class="text-muted-foreground">Entropy per character (mean):</span>{{ wordlist.stats.entropyPerCharacter }} bits
-          </p>
-          <p class="flex gap-2">
-            <span class="text-muted-foreground">Entropy per character (unique prefix):</span>{{ wordlist.stats.entropyPerUniqueCharacterPrefix }} bits
-          </p>
-          <p class="flex gap-2">
-            <span class="text-muted-foreground">Efficiency per character (mean):</span>{{ wordlist.stats.efficiencyPerCharacter }} bits
-          </p>
-          <p class="flex gap-2">
-            <span class="text-muted-foreground">Shortest word:</span>{{ wordlist.stats.shortestWordLength }} characters<span class="text-muted-foreground">("{{ wordlist.stats.shortestWordExample }}")</span>
-          </p>
-          <p class="flex gap-2">
-            <span class="text-muted-foreground">Longest word:</span>{{ wordlist.stats.longestWordLength }} characters<span class="text-muted-foreground">("{{ wordlist.stats.longestWordExample }}")</span>
-          </p>
-          <p class="flex gap-2">
-            <span class="text-muted-foreground">Longest shared prefix:</span>{{ wordlist.stats.longestSharedPrefix }} characters
-          </p>
-          <p class="flex gap-2">
-            <span class="text-muted-foreground">Unique prefix:</span> {{ wordlist.stats.canBeShortened ? `${wordlist.stats.uniqueCharacterPrefix} characters` : 'no' }}
-          </p>
+        <!-- TODO: add info popup to each -->
+        <div class="mt-6 grid grid-cols-[300px_1fr] gap-x-2 gap-y-2">
+          <InfoItem
+            :wrapper="false"
+            label="List length"
+          >
+            <template #label="{ label }">
+              <p>{{ label }}</p>
+              <!-- <Icon name="ph:info" class="text-sm" /> -->
+            </template>
+
+            {{ wordlist.stats.words.toLocaleString() }} words
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Mean word length"
+          >
+            {{ wordlist.stats.meanWordLength.toFixed(2) }} characters
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Entropy per word"
+          >
+            <span>{{ wordlist.stats.entropyPerWord }} bits</span>
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Efficiency per character"
+          >
+            <span>{{ wordlist.stats.efficiencyPerCharacter }} bits</span>
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Shortest word"
+          >
+            <span>{{ wordlist.stats.shortestWordLength }} characters</span>
+            <span class="text-muted-foreground"> ({{ wordlist.stats.shortestWordExample }})</span>
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Longest word"
+          >
+            <span>{{ wordlist.stats.longestWordLength }} characters</span>
+            <span class="text-muted-foreground"> ({{ wordlist.stats.longestWordExample }})</span>
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Longest shared prefix"
+          >
+            {{ wordlist.stats.longestSharedPrefix }} characters
+          </InfoItem>
+          <InfoItem
+            :wrapper="false"
+            label="Unique shared prefix"
+          >
+            {{ wordlist.stats.canBeShortened ? `${wordlist.stats.uniqueCharacterPrefix} characters` : '-' }}
+          </InfoItem>
+
+          <InfoItem
+            v-if=" wordlist.stats.canBeShortened"
+            :wrapper="false"
+            label="Entropy per character (unique prefix)"
+          >
+            {{ wordlist.stats.entropyPerUniqueCharacterPrefix }} bits
+          </InfoItem>
         </div>
       </div>
     </div>

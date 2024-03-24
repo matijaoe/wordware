@@ -35,17 +35,15 @@ const analyzeWordlist = async (wordlistSlug: WordlistSlug): Promise<{ sample: st
   const canBeShortened = Anal.canBeShortened(words)
   const hasDuplicates = Anal.hasDuplicates(words)
 
-  const entropyPerCharacter = Anal.assumedEntropyPerCharacter(words, meanWordLength)
-  const entropyPerUniqueCharacterPrefix = Anal.assumedEntropyPerUniqueCharacterPrefix(words, uniqueCharacterPrefix)
   const efficiencyPerCharacter = Anal.efficiencyPerCharacter(words)
+  const entropyPerUniqueCharacterPrefix = Anal.assumedEntropyPerUniqueCharacterPrefix(words, uniqueCharacterPrefix)
 
   const stats = {
     words: wordCount,
     meanWordLength,
     entropyPerWord,
-    entropyPerCharacter,
-    entropyPerUniqueCharacterPrefix,
     efficiencyPerCharacter,
+    entropyPerUniqueCharacterPrefix,
     longestWordExample,
     shortestWordExample,
     shortestWordLength,

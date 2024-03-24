@@ -218,6 +218,11 @@ const selectAndCopyPassphrase = () => {
   selectPassphrase()
   copyPassphrase()
 }
+
+const { g, c /* keys you want to monitor */ } = useMagicKeys()
+
+whenever(g, () => setNewPassphrase())
+whenever(c, () => selectAndCopyPassphrase())
 </script>
 
 <template>
@@ -249,18 +254,32 @@ const selectAndCopyPassphrase = () => {
           <Slider
             v-model="wordCountModel"
             :max="15"
-            :min="3"
+            :min="1"
             :step="1"
           />
         </div>
 
-        <Button variant="outline" size="default" @click="selectAndCopyPassphrase">
-          Copy
-        </Button>
+        <BaseTooltip :delay="1000">
+          <Button variant="outline" size="default" @click="selectAndCopyPassphrase">
+            Copy
+          </Button>
+          <template #content>
+            <p>
+              Press <Kbd>C</Kbd> to copy
+            </p>
+          </template>
+        </BaseTooltip>
 
-        <Button variant="default" size="default" @click="setNewPassphrase">
-          Generate new
-        </Button>
+        <BaseTooltip :delay="1000">
+          <Button variant="default" size="default" @click="setNewPassphrase">
+            Generate new
+          </Button>
+          <template #content>
+            <p>
+              Press <Kbd>G</Kbd> to generate
+            </p>
+          </template>
+        </BaseTooltip>
 
         <div class="flex flex-col gap-1.5">
           <Label>Separator</Label>
