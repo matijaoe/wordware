@@ -25,12 +25,15 @@ const onGoToWordlist = () => {
           {{ wordlist.name }}
         </CardTitle>
         <CardDescription>
-          {{ constructedDescription }}
+          {{ wordlist.stats.words.toLocaleString() }} words
         </CardDescription>
       </CardHeader>
 
       <CardContent class="grow text-left">
         <div class="flex flex-col h-full mt-auto">
+          <CardDescription class="line-clamp-4">
+            {{ constructedDescription }}
+          </CardDescription>
           <div class="flex justify-items-end gap-2 mt-auto ml-auto">
             <Button
               variant="outline"

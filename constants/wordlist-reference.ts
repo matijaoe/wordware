@@ -77,6 +77,7 @@ export const wordlistsReference = [
     localFile: 'orchard-street-medium.txt',
   },
   {
+    // same as medium
     slug: 'orchard-street-diceware',
     name: 'Orchard Street Diceware List',
     sourceFile: 'https://raw.githubusercontent.com/sts10/orchard-street-wordlists/main/lists/orchard-street-diceware.txt',
@@ -130,4 +131,59 @@ export const wordlistsReference = [
     sourceFile: 'https://raw.githubusercontent.com/freedomofpress/securedrop/develop/securedrop/wordlists/en.txt',
     localFile: 'securedrop-en.txt',
   },
+  {
+    // TODO: check if in alphabetical order
+    slug: 'nickzoic-wordlist',
+    name: 'nickzoic Wordlist',
+    sourceFile: 'https://raw.githubusercontent.com/nickzoic/word-list/master/word_list.txt',
+    localFile: 'nickzoic_word_list.txt',
+  },
+  {
+    slug: 'monero-wordlist',
+    name: 'Monero Wordlist',
+    sourceFile: 'https://raw.githubusercontent.com/monero-project/monero/master/src/mnemonics/english.h',
+    localFile: 'monero-wordlist.txt',
+  },
+  {
+    // same as monero, check, and if so, probably remove
+    slug: 'entropy-menmonics-nebulous-labs',
+    name: 'Entropy Mnemonics Wordlist',
+    sourceFile: 'https://gitlab.com/NebulousLabs/entropy-mnemonics/-/raw/master/english.go',
+    localFile: 'entropy-menmonics-nebulous-labs.txt',
+  },
+  {
+    slug: 'mnemonicode-new',
+    name: 'Mnemonicode New Wordlist',
+    sourceFile: 'https://raw.githubusercontent.com/singpolyma/mnemonicode/master/mn_wordlist.c',
+    localFile: 'mnemonicode-new-wordlist.txt',
+  },
+  {
+    slug: 'passwdqc-4k',
+    name: 'passwdqc 4k Wordset',
+    sourceFile: 'https://web.archive.org/web/20230925094452/https://fossies.org/linux/passwdqc/wordset_4k.c',
+    localFile: 'passwdqc-wordset-4k.txt',
+  },
+  {
+    slug: 'google-10k-english',
+    name: 'Google 10000 Most Common Words',
+    sourceFile: 'https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english.txt',
+    localFile: 'google-10k-english.txt',
+  },
+  // TODO: not passing map gen
+  // {
+  //   slug: 'nordpass-wordlist',
+  //   name: 'Nordpass Wordlist',
+  //   sourceFile: 'https://gist.githubusercontent.com/atoponce/4c4692940522947b8611d33d7cf3225d/raw/cd078528f2c2e5dbb8c750f7b2d1a9508c094840/nordpass-word-list.txt',
+  //   localFile: 'nordpass-wordlist.txt',
+  // },
+  {
+    slug: 'eyeware-8k',
+    name: 'Eyeware 8k Wordlist',
+    sourceFile: 'https://raw.githubusercontent.com/celskeggs/eyeware/master/eyeware8k',
+    localFile: 'eyeware-8k.txt',
+  },
 ] satisfies WordlistReference[]
+// TODO: https://gist.github.com/atoponce/95c4f36f2bc12ec13242a3ccc55023af
+
+// TODO: no reason to keep duplicates (nickzoic)
+// TODO: only add EFF fandom improved lists

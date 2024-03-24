@@ -22,6 +22,16 @@ const analyzeWordlist = async (wordlistSlug: WordlistSlug): Promise<{ sample: st
 
   const wordCount = words.length
 
+  // TODO: some ideas
+  // character length
+  // words count starting per letter
+  // TODO: alphabetical: boolean
+  // constantCase: boolean
+  // allLowerCase
+  // has number
+  // has symbols
+  // all letters..
+
   const longestWordExample = Anal.longestWordExample(words) ?? ''
   const shortestWordExample = Anal.shortestWordExample(words) ?? ''
   const shortestWordLength = shortestWordExample.length

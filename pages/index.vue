@@ -103,7 +103,8 @@ const passphraseHtml = computed(() => {
   return html
 })
 
-type Casing = 'upper' | 'lower' | 'capitalized'
+// TODO: some wordlist could have mixed casing already, make the default be keep case, and add mixed case option as well
+type Casing = 'keep' | 'upper' | 'lower' | 'capitalized'
 // TODO: ls not working
 const casing = useCookie<Casing>('passphrase:casing', { default: () => 'lower' })
 watch(casing, (val) => {
