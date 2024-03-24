@@ -69,18 +69,13 @@ export const uniqueCharacterPrefix = (list: string[], _longestWordLength?: numbe
   return longestSharedPrefix
 }
 
-export const assumedEntropyPerCharacter = (list: string[], providedMeanWordLength?: number) => {
-  const _meanWordLength = providedMeanWordLength ?? meanWordLength(list) ?? 0
-  const assumedEntropyPerWord = new Decimal(entropyPerWord(list.length))
-  return assumedEntropyPerWord.dividedBy(_meanWordLength).todp(3).toNumber()
-}
-
 export const assumedEntropyPerUniqueCharacterPrefix = (list: string[], prefixLength?: number) => {
   const _prefixLength = prefixLength ?? uniqueCharacterPrefix(list) ?? 0
   const assumedEntropyPerWord = new Decimal(entropyPerWord(list.length))
   return assumedEntropyPerWord.dividedBy(_prefixLength).todp(3).toNumber()
 }
 
+// TODO: the same exact thing as assumedEntropyPerCharacter
 export const efficiencyPerCharacter = (list: string[]) => {
   const _meanWordLength = new Decimal(meanWordLength(list))
   const _entropyPerWord = new Decimal(entropyPerWord(list.length))

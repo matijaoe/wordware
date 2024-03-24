@@ -14,7 +14,6 @@ export type WordlistAnalysis = {
   words: number
   meanWordLength: number
   entropyPerWord: number
-  entropyPerCharacter: number
   entropyPerUniqueCharacterPrefix: number
   efficiencyPerCharacter: number
   shortestWordExample: string
@@ -49,3 +48,12 @@ export type WordlistSlug =
   | 'orchard-street-qwerty'
   | 'sts10-1password-replacement'
   | 'agile-words-1password'
+  | 'biglou-bad-words'
+  | 'securedrop-wordlist'
+  | 'nickzoic-wordlist'
+  | 'monero-wordlist'
+  | 'entropy-menmonics-nebulous-labs'
+  | 'mnemonicode-new'
+  | 'passwdqc-4k'
+  | 'google-10k-english'
+  | 'eyeware-8k'

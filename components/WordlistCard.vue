@@ -18,19 +18,22 @@ const onGoToWordlist = () => {
 </script>
 
 <template>
-  <Card class="overflow-hidden hover:bg-secondary/10 aspect-square flex flex-col">
+  <Card class="overflow-hidden hover:bg-secondary/10 aspect-[12/13] flex flex-col">
     <template v-if="wordlist">
       <CardHeader class="text-left">
         <CardTitle class="line-clamp-2">
           {{ wordlist.name }}
         </CardTitle>
-        <CardDescription class="line-clamp-3">
-          {{ constructedDescription }}
+        <CardDescription>
+          {{ wordlist.stats.words.toLocaleString() }} words
         </CardDescription>
       </CardHeader>
 
       <CardContent class="grow text-left">
         <div class="flex flex-col h-full mt-auto">
+          <CardDescription class="line-clamp-4">
+            {{ constructedDescription }}
+          </CardDescription>
           <div class="flex justify-items-end gap-2 mt-auto ml-auto">
             <Button
               variant="outline"

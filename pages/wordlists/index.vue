@@ -17,14 +17,17 @@ const openListModal = (wordlistSlug: WordlistSlug) => {
   isModalOpen.value = true
 }
 
-watch(isModalOpen, (val) => {
-  if (!val) {
+watch(isModalOpen, (open) => {
+  if (!open) {
     // TODO: do I have to wait for animation to finish?
     setTimeout(() => {
       selectedList.value = undefined
     }, 200)
   }
 })
+
+// TODO: implement order prop, and sort by order everywhere
+// TODO: perhaps make it so you can change the order by drag and drop (may be too complicated though)
 </script>
 
 <template>
@@ -54,6 +57,6 @@ watch(isModalOpen, (val) => {
 
 <style lang="postcss" scoped>
 .grid-wordlists {
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
 }
 </style>

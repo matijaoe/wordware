@@ -54,8 +54,13 @@ export const useWordlist = (_wordlistId: MaybeRefOrGetter<WordlistSlug | undefin
     if (!isDefined(wordlist)) {
       return ''
     }
-    const { words, entropyPerWord, entropyPerCharacter, entropyPerUniqueCharacterPrefix } = wordlist.value.stats
-    return `${words} words, ${entropyPerWord} bits of entropy per word, ${entropyPerCharacter} bits of entropy per character, ${entropyPerUniqueCharacterPrefix} bits of entropy per unique character prefix`
+
+    if (wordlist.value.description) {
+      return wordlist.value.description
+    }
+
+    const { words, entropyPerWord, efficiencyPerCharacter, entropyPerUniqueCharacterPrefix } = wordlist.value.stats
+    return `${words.toLocaleString()} words, ${entropyPerWord} bits of entropy per word, ${efficiencyPerCharacter} bits of entropy per character, ${entropyPerUniqueCharacterPrefix} bits of entropy per unique character prefix`
   })
 
   const words = computed(() => {
@@ -63,7 +68,7 @@ export const useWordlist = (_wordlistId: MaybeRefOrGetter<WordlistSlug | undefin
       return []
     }
 
-    const exportName = camelCase(wordlistSlug.value)
+    const exportName = camelCase(wordlistSlug.value) as WordlistExport
 
     // TODO: this only gets array ones, not Map
     // probably will have to find another way to store and get words
@@ -71,9 +76,12 @@ export const useWordlist = (_wordlistId: MaybeRefOrGetter<WordlistSlug | undefin
     return res
   })
 
+  const listLength = computed(() => words.value.length)
+
   return {
     wordlist,
     constructedDescription,
     words,
+    listLength,
   }
 }

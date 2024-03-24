@@ -70,3 +70,6 @@ export function max<T>(
   by ??= (item: T) => item as unknown as number
   return boil(array, (a, b) => (by(a) > by(b) ? a : b))
 }
+
+export const isDigit = (char: string) => /\d/.test(char)
+export const isLetter = (char: string) => /[a-zA-Z]/.test(char)

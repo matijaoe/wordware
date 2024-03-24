@@ -9,6 +9,10 @@
 </template>
 
 <style lang="postcss" scoped>
+:global(:root) {
+  color-scheme: dark;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s ease;

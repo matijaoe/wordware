@@ -20,7 +20,7 @@ export default defineNuxtConfig({
   },
 
   devtools: { enabled: true },
-  
+
   experimental: {
     typedPages: true,
   },
@@ -32,4 +32,11 @@ export default defineNuxtConfig({
       'utils/**',
     ],
   },
+
+  app: {
+    head: {
+      title: 'Wordware',
+    },
+  },
+
 })
