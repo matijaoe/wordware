@@ -13,126 +13,64 @@ const wordCountModel = computed<number[]>({
   },
 })
 
-const availableSeparators = [
-  {
-    label: 'space',
-    value: 'space',
-    symbol: ' ',
-  },
-  {
-    label: 'dash',
-    value: 'dash',
-    symbol: '-',
-  },
-  {
-    label: 'underscore',
-    value: 'underscore',
-    symbol: '_',
-  },
-  {
-    label: 'period',
-    value: 'period',
-    symbol: '.',
-  },
-  {
-    label: 'comma',
-    value: 'comma',
-    symbol: ',',
-  },
-  {
-    label: 'semicolon',
-    value: 'semicolon',
-    symbol: ';',
-  },
-  {
-    label: 'forward slash',
-    value: 'forward-slash',
-    symbol: '/',
-  },
-  {
-    label: 'at',
-    value: 'at',
-    symbol: '@',
-  },
-  {
-    label: 'tilde',
-    value: 'tilde',
-    symbol: '~',
-  },
-  {
-    label: 'question mark',
-    value: 'question-mark',
-    symbol: '?',
-  },
-  {
-    label: 'exclamation mark',
-    value: 'exclamation-mark',
-    symbol: '!',
-  },
-  {
-    label: 'plus',
-    value: 'plus',
-    symbol: '+',
-  },
-  {
-    label: 'equals',
-    value: 'equals',
-    symbol: '=',
-  },
-  {
-    label: 'ampersand',
-    value: 'ampersand',
-    symbol: '&',
-  },
-  {
-    label: 'percent',
-    value: 'percent',
-    symbol: '%',
-  },
-  {
-    label: 'hash',
-    value: 'hash',
-    symbol: '#',
-  },
-  {
-    label: 'star',
-    value: 'star',
-    symbol: '*',
-  },
-  {
-    label: 'none',
-    value: 'none',
-    symbol: '',
-  },
-  {
-    label: 'numbers',
-    value: '<RANDOM_NUMBERS>',
-    symbol: 'XX',
-  },
-] as const
-type SeparatorValue = typeof availableSeparators[number]['value']
-
-// TODO: rework separators, make them type safe, allow custom separator values, mark custom non-number non-symbol separators as diff color, to diff from regular word
-const separators = ref<{ label: string, value: SeparatorValue, symbol: string }[]>([...availableSeparators])
-const separator = useLocalStorage<SeparatorValue>('passphrase:separator', 'dash')
-const selectedSeparator = computed(() => {
-  return separators.value.find((item) => item.value === separator.value)
-})
-
-const isSeparatorRandomNumbers = computed(() => {
-  return separator.value === '<RANDOM_NUMBERS>'
-})
-
 // Extra settings toggles
 const includeNumber = useLocalStorage<boolean>('passphrase:include-number', true)
 const isHidden = ref<boolean>(false)
 
-// TODO: unselect and disable includeNumber toggle when random numbers as separator selected
+const {
+  EMPTY_SPACE,
+  modeSeparators,
+  spaceSeparators,
+  symbolSeparators,
+  separatorOptions,
+} = useSeparators()
+
+const separator = useCookie<SeparatorValue>('passphrase:separator', { default: () => 'space' })
+const selectedSeparator = computed(() => separatorOptions.find((item) => item.value === separator.value))
+const isSeparatorCustom = computed(() => separator.value === '<CUSTOM>')
+const isSeparatorRandomNumbers = computed(() => separator.value === '<RANDOM_NUMBERS>')
+
+const { customSeparator, customSeparatorEl, resetCustomSeparator } = useCustomSeparator()
+
+const isSpecialOrModeSeparator = (value: SeparatorValue) => {
+  // @ts-expect-error
+  return [...modeSeparators, ...spaceSeparators].map((s) => s.value).includes(value)
+}
+
+// unselect and disable includeNumber toggle when random numbers as separator selected
+// TODO: always show custom separator input, but switch to custom or any when starting to type (and when it isnt matching others?)
 watch(separator, (val) => {
   if (val === '<RANDOM_NUMBERS>') {
     includeNumber.value = false
+  } else if (val !== '<CUSTOM>') {
+    resetCustomSeparator()
   }
 }, { immediate: true })
+
+function useCustomSeparator() {
+  const DEFAULT_CUSTOM_SEPARATOR = EMPTY_SPACE
+
+  const customSeparator = useCookie<string>('passphrase:custom-separator', { default: () => DEFAULT_CUSTOM_SEPARATOR })
+  const customSeparatorEl = ref<{ inputEl: HTMLInputElement, focus: () => void }>()
+
+  const resetCustomSeparator = () => {
+    customSeparator.value = DEFAULT_CUSTOM_SEPARATOR
+  }
+
+  watch(customSeparator, (val) => {
+    // restrict to single character (last input takes precedence)
+    if (val.length > 1) {
+      const last = val.at(-1) ?? DEFAULT_CUSTOM_SEPARATOR
+      customSeparator.value = last
+    }
+  }, { flush: 'post' })
+
+  return {
+    customSeparator,
+    customSeparatorEl,
+    resetCustomSeparator,
+  }
+}
 
 const passphrase = ref<string>('')
 const passphraseHtml = computed(() => {
@@ -157,7 +95,7 @@ const passphraseHtml = computed(() => {
 
     const sep = selectedSeparator.value
     if (sep.value !== '<RANDOM_NUMBERS>' && isSymbol(char)) {
-      return `<span class="text-fuchsia-500">${char === ' ' ? '&nbsp;' : char}</span>`
+      return `<span class="text-fuchsia-500">${char === EMPTY_SPACE ? '&nbsp;' : char}</span>`
     }
     return char
   }).join('')
@@ -167,25 +105,32 @@ const passphraseHtml = computed(() => {
 
 type Casing = 'upper' | 'lower' | 'capitalized'
 // TODO: ls not working
-const casing = ref<Casing>('lower')
+const casing = useCookie<Casing>('passphrase:casing', { default: () => 'lower' })
 watch(casing, (val) => {
+  // when toggle unselected
+  // TODO: do not allow unselect, make it so toggle always means 'turn on'
   if (!val) {
     casing.value = 'lower'
   }
-})
+}, { immediate: true })
 
 const setNewPassphrase = () => {
+  // TODO: turn to computed
+  const _separator = isSeparatorCustom.value
+    ? customSeparator.value
+    : selectedSeparator.value?.symbol ?? EMPTY_SPACE
+
   passphrase.value = generatePassphrase({
     wordlist: wordlistWords.value,
     count: wordCount.value,
-    separator: selectedSeparator.value?.symbol,
+    separator: _separator,
     randomNumbersAsSeparator: isSeparatorRandomNumbers.value,
     casing: casing.value,
     includeNumber: includeNumber.value,
   })
-  unselectPassphrase()
 }
 
+// wrapped in onMounted because of hydration errors otherwise (2 differrent passphrases shown one after another on first load)
 onMounted(() => {
   watchEffect(() => {
     setNewPassphrase()
@@ -205,10 +150,6 @@ const selectPassphrase = () => {
   selection?.removeAllRanges()
   selection?.addRange(range)
 }
-const unselectPassphrase = () => {
-  const selection = window.getSelection()
-  selection?.removeAllRanges()
-}
 
 const copyPassphrase = () => {
   navigator.clipboard.writeText(passphrase.value)
@@ -221,8 +162,22 @@ const selectAndCopyPassphrase = () => {
 
 const { g, c /* keys you want to monitor */ } = useMagicKeys()
 
-whenever(g, () => setNewPassphrase())
-whenever(c, () => selectAndCopyPassphrase())
+// TODO: disable when custo separator input focused
+const activeEl = useActiveElement()
+const isBodyActive = computed(() => activeEl.value?.tagName === 'BODY')
+const isCopyBtnActive = computed(() => activeEl.value?.id === 'copy-btn')
+const isGenBtnActive = computed(() => activeEl.value?.id === 'generate-btn')
+
+whenever(g, () => {
+  if (isBodyActive.value || isCopyBtnActive.value || isGenBtnActive.value) {
+    setNewPassphrase()
+  }
+})
+whenever(c, () => {
+  if (isBodyActive.value || isCopyBtnActive.value || isGenBtnActive.value) {
+    selectAndCopyPassphrase()
+  }
+})
 </script>
 
 <template>
@@ -260,7 +215,7 @@ whenever(c, () => selectAndCopyPassphrase())
         </div>
 
         <BaseTooltip :delay="1000">
-          <Button variant="outline" size="default" @click="selectAndCopyPassphrase">
+          <Button id="copy-btn" variant="outline" size="default" @click="selectAndCopyPassphrase">
             Copy
           </Button>
           <template #content>
@@ -271,7 +226,7 @@ whenever(c, () => selectAndCopyPassphrase())
         </BaseTooltip>
 
         <BaseTooltip :delay="1000">
-          <Button variant="default" size="default" @click="setNewPassphrase">
+          <Button id="generate-btn" variant="default" size="default" @click="setNewPassphrase">
             Generate new
           </Button>
           <template #content>
@@ -281,28 +236,60 @@ whenever(c, () => selectAndCopyPassphrase())
           </template>
         </BaseTooltip>
 
-        <div class="flex flex-col gap-1.5">
-          <Label>Separator</Label>
-          <Select v-model="separator">
-            <SelectTrigger class="text-left">
-              <SelectValue placeholder="Separator" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem
-                v-for="item in separators"
-                :key="item.value"
-                class="text-left"
-                :value="item.value"
-              >
-                <span class="w-full">{{ item.label }}</span>
-                <span class="text-muted-foreground ml-1 font-mono">({{ item.symbol }})</span>
-              </SelectItem>
-            </SelectContent>
-          </Select>
+        <!-- TODO: shift when custom selected, with cookie on first load -->
+        <div class="flex items-end gap-2">
+          <div class="flex flex-col gap-1.5 grow">
+            <Label>Separator</Label>
+            <Select v-model="separator">
+              <SelectTrigger class="text-left">
+                <SelectValue placeholder="Separator">
+                  <!-- <div v-if="selectedSeparator">
+                    <span class="w-full">{{ selectedSeparator.label }}</span>
+                    <span
+                      v-if="isSpecialSeparatorSelected"
+                      class="text-muted-foreground ml-1 font-mono"
+                    >({{ selectedSeparator?.symbol }})</span>
+                  </div> -->
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup
+                  v-for="group in [
+                    { label: 'Spacing', values: spaceSeparators },
+                    { label: 'Special', values: modeSeparators },
+                    { label: 'Symbols', values: symbolSeparators }
+                  ]"
+                  :key="group.label"
+                >
+                  <SelectLabel>{{ group.label }}</SelectLabel>
+                  <SelectItem
+                    v-for="item in group.values"
+                    :key="item.value"
+                    class="text-left"
+                    :value="item.value"
+                  >
+                    <span class="w-full">{{ item.label }}</span>
+                    <span
+                      v-if="!isSpecialOrModeSeparator(item.value)"
+                      class="text-muted-foreground ml-1 font-mono"
+                    >({{ item.symbol }})</span>
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <Input
+            v-if="separator === '<CUSTOM>'"
+            ref="customSeparatorEl"
+            v-model="customSeparator"
+            class="w-10 text-md aspect-square text-center shrink-0"
+          />
         </div>
 
         <div class="col-span-2">
           <div class="flex flex-col gap-1.5">
+            <!-- TODO: separate by diceware compatible -->
+            <!-- separate diff locales? -->
             <Label>Wordlist</Label>
             <Select v-model="selectedList" class="text-left">
               <SelectTrigger>

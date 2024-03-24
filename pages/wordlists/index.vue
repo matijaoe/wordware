@@ -25,6 +25,9 @@ watch(isModalOpen, (open) => {
     }, 200)
   }
 })
+
+// TODO: implement order prop, and sort by order everywhere
+// TODO: perhaps make it so you can change the order by drag and drop (may be too complicated though)
 </script>
 
 <template>
