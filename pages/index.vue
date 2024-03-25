@@ -195,7 +195,7 @@ whenever(c, () => {
 <template>
   <div>
     <div class="w-fullmt-[10vh]">
-      <h2 class="text-4xl font-mono leading-snug text-center text-balance mb-12 max-w-4xl mx-auto ">
+      <h2 class="text-2xl md:text-4xl font-mono leading-snug text-center text-balance mb-6 md:mb-12 max-w-4xl mx-auto ">
         Sleek passphrase generator
       </h2>
 
@@ -211,7 +211,7 @@ whenever(c, () => {
         />
       </button>
 
-      <div class="mt-4 grid grid-cols-4 gap-x-4 gap-y-5 items-end max-w-2xl mx-auto ">
+      <div class="mt-4 grid md:grid-cols-4 gap-x-4 gap-y-5 items-end max-w-2xl mx-auto ">
         <div class="col-span-2 flex flex-col gap-2">
           <div class="flex items-center justify-between">
             <Label class="text-sm">Words</Label>
