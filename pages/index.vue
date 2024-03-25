@@ -6,6 +6,7 @@ const selectedList = useCookie<WordlistSlug>('selected-wordlist', { default: () 
 const { selectedLists } = useWordlistSelection()
 const { words: wordlistWords, wordlist: currentWordlist } = useWordlist(selectedList)
 
+
 const wordCount = useCookie<number>('passphrase:word-count', { default: () => 6 })
 const wordCountModel = computed<number[]>({
   get: () => [wordCount.value],
@@ -63,7 +64,7 @@ function useCustomSeparator() {
       return
     }
 
-    customSeparator.value ||= DEFAULT_CUSTOM_SEPARATOR
+    // customSeparator.value ||= DEFAULT_CUSTOM_SEPARATOR
 
     if (val.length > 1) {
       // restrict to single character (last input takes precedence)
