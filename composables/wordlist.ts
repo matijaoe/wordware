@@ -1,3 +1,4 @@
+import { StorageSerializers } from '@vueuse/core'
 import { destr } from 'destr'
 import { camelCase } from 'scule'
 import { WordlistMap } from '~/constants/generated/wordlist-map'
@@ -14,26 +15,26 @@ const DEFAULT_WORDLISTS = new Set<WordlistSlug>([
   'sts10-1password-replacement',
 ])
 
+// TODO: make sure at least one list is selected
+// make sure to handle and switch selected list option when that list is removed as a selection option
 export const useWordlistSelection = () => {
-  const selectedLists = useCookie<Set<WordlistSlug>>('wordlist:selection', {
-    default: () => DEFAULT_WORDLISTS,
-    decode: (value: string) => {
-      const parsedArr = destr<WordlistSlug[]>(value) ?? []
-      return new Set<WordlistSlug>(parsedArr)
-    },
-    encode: (value) => JSON.stringify(Array.from(value)),
+  // didn't work nicely with set
+  const selectedLists = useCookie<Array<WordlistSlug>>('wordlist:selection', {
+    default: () => Array.from(DEFAULT_WORDLISTS),
+
   })
 
   const addWordlist = (wordlistSlug: WordlistSlug) => {
-    selectedLists.value.add(wordlistSlug)
+    // seems it needs to be a new array to always trigger reactivity
+    selectedLists.value = [...selectedLists.value, wordlistSlug]
   }
 
   const removeWordlist = (wordlistSlug: WordlistSlug) => {
-    selectedLists.value.delete(wordlistSlug)
+    selectedLists.value = selectedLists.value.filter((slug) => slug !== wordlistSlug)
   }
 
   const checkIfWordlistSelected = (wordlistSlug: WordlistSlug) => {
-    return selectedLists.value.has(wordlistSlug)
+    return selectedLists.value.includes(wordlistSlug)
   }
 
   return {

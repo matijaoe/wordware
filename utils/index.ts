@@ -73,3 +73,12 @@ export function max<T>(
 
 export const isDigit = (char: string) => /\d/.test(char)
 export const isLetter = (char: string) => /[a-zA-Z]/.test(char)
+
+export const isAscii = (word: string) => {
+  // eslint-disable-next-line no-control-regex
+  return /^[\x00-\x7F]*$/.test(word)
+}
+
+export const uniq = <T>(array: readonly T[]) => {
+  return [...new Set(array)]
+}

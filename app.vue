@@ -3,6 +3,8 @@
     <Body>
       <NuxtLayout class="min-h-screen">
         <NuxtPage />
+
+        <Toaster />
       </NuxtLayout>
     </Body>
   </Html>

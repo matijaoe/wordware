@@ -10,12 +10,13 @@ export type WordlistReference = {
   files?: { label: string, value: string }[]
 }
 
+// TODO: organize into sections, thin of better naming for some
 export type WordlistAnalysis = {
   words: number
   meanWordLength: number
   entropyPerWord: number
-  entropyPerUniqueCharacterPrefix: number
   efficiencyPerCharacter: number
+  assumedEntropyPerCharacter: number
   shortestWordExample: string
   longestWordExample: string
   shortestWordLength: number
@@ -23,7 +24,20 @@ export type WordlistAnalysis = {
   longestSharedPrefix: number
   uniqueCharacterPrefix: number
   canBeShortened: boolean
-  hasDuplicates: boolean
+  hasDuplicatesExact: boolean
+  hasDuplicatesFuzzy: boolean
+  uniqueWordsFoundExact: number
+  uniqueWordsFoundFuzzy: number
+  uniqueCharactersExact: number
+  uniqueCharactersFuzzy: number
+  hasNonAsciiCharacters: boolean
+  isAllLowercase: boolean
+  hasConsistentCase: boolean
+  hasNumbers: boolean
+  freeOfPrefixWords: boolean
+  freeOfSuffixWords: boolean
+  // uniquelyDecodable: boolean
+  isAboveBruteForceLine: boolean
 }
 
 export type Wordlist = WordlistReference & {

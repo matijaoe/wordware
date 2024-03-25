@@ -31,10 +31,10 @@ watch(isModalOpen, (open) => {
 </script>
 
 <template>
-  <div class="grid grid-cols-[300px_1fr] gap-4 mt-4">
+  <div class="grid lg:grid-cols-[300px_1fr] gap-4 mt-4">
     <div>
       <div class="sticky top-8">
-        <h1 class="text-4xl">
+        <h1 class="text-2xl md:text-4xl">
           Wordlists
         </h1>
 
@@ -47,7 +47,7 @@ watch(isModalOpen, (open) => {
     <div class="grid-wordlists grid gap-4">
       <template v-for="[wordlistSlug] in WordlistMap" :key="wordlistSlug">
         <WordlistCard
-          :wordlist-slug="wordlistSlug"
+          :wordlist-slug
           @click="openListModal(wordlistSlug)"
         />
       </template>

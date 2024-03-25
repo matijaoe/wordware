@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { useToast } from '@/components/ui/toast/use-toast'
+import type { WordCasingOption } from '~/models'
 import type { WordlistSlug } from '~/models/wordlist'
 
 const selectedList = useCookie<WordlistSlug>('selected-wordlist', { default: () => 'eff-long' })
@@ -14,7 +16,7 @@ const wordCountModel = computed<number[]>({
 })
 
 // Extra settings toggles
-const includeNumber = useLocalStorage<boolean>('passphrase:include-number', true)
+const includeNumber = useCookie<boolean>('passphrase:include-number', { default: () => false })
 const isHidden = ref<boolean>(false)
 
 const {
@@ -25,6 +27,7 @@ const {
   separatorOptions,
 } = useSeparators()
 
+// rename to delimiter?
 const separator = useCookie<SeparatorValue>('passphrase:separator', { default: () => 'space' })
 const selectedSeparator = computed(() => separatorOptions.find((item) => item.value === separator.value))
 const isSeparatorCustom = computed(() => separator.value === '<CUSTOM>')
@@ -58,12 +61,19 @@ function useCustomSeparator() {
   }
 
   watch(customSeparator, (val) => {
-    // restrict to single character (last input takes precedence)
+    if (val.length === 1) {
+      return
+    }
+
+    // still issues sometime when switching to option and inputing first char, it isnt set
+    // customSeparator.value ||= DEFAULT_CUSTOM_SEPARATOR
+
     if (val.length > 1) {
-      const last = val.at(-1) ?? DEFAULT_CUSTOM_SEPARATOR
+      // restrict to single character (last input takes precedence)
+      const last = val.trimStart().at(-1) ?? DEFAULT_CUSTOM_SEPARATOR
       customSeparator.value = last
     }
-  }, { flush: 'post' })
+  }, { flush: 'post', immediate: true })
 
   return {
     customSeparator,
@@ -103,40 +113,45 @@ const passphraseHtml = computed(() => {
   return html
 })
 
-// TODO: some wordlist could have mixed casing already, make the default be keep case, and add mixed case option as well
-type Casing = 'keep' | 'upper' | 'lower' | 'capitalized'
-// TODO: ls not working
-const casing = useCookie<Casing>('passphrase:casing', { default: () => 'lower' })
-watch(casing, (val) => {
-  // when toggle unselected
-  // TODO: do not allow unselect, make it so toggle always means 'turn on'
-  if (!val) {
-    casing.value = 'lower'
+const calculatedEntropy = computed(() => {
+  // TODO: only taking words into consideration for now
+  if (!isDefined(currentWordlist) || !isDefined(passphrase)) {
+    return undefined
   }
-}, { immediate: true })
+  const entropyPerWord = currentWordlist.value?.stats.entropyPerWord
+  const entropy = entropyPerWord * wordCount.value
+  return entropy.toFixed(2)
+})
 
-const setNewPassphrase = () => {
-  // TODO: turn to computed
+// TODO: some wordlist could have mixed casing already, make the default be keep case, and add mixed case option as well
+// TODO: ls not working
+const casing = useCookie<WordCasingOption>('passphrase:casing', { default: () => 'preserve' })
+
+const generatePassphraseUsingConfig = () => {
   const _separator = isSeparatorCustom.value
     ? customSeparator.value
     : selectedSeparator.value?.symbol ?? EMPTY_SPACE
 
-  passphrase.value = generatePassphrase({
+  return generatePassphrase({
     wordlist: wordlistWords.value,
     count: wordCount.value,
     separator: _separator,
     randomNumbersAsSeparator: isSeparatorRandomNumbers.value,
+    randomNumberAsSeparatorDigits: 2,
     casing: casing.value,
     includeNumber: includeNumber.value,
+    includeNumberPosition: undefined, // start or end
   })
 }
 
-// wrapped in onMounted because of hydration errors otherwise (2 differrent passphrases shown one after another on first load)
-onMounted(() => {
-  watchEffect(() => {
-    setNewPassphrase()
-  })
+const setNewPassphrase = () => {
+  passphrase.value = generatePassphraseUsingConfig()
+}
+
+watchEffect(() => {
+  setNewPassphrase()
 })
+// })
 
 const passphraseEl = ref<HTMLDivElement>()
 
@@ -161,9 +176,29 @@ const selectAndCopyPassphrase = () => {
   copyPassphrase()
 }
 
+const bulkGenerate = (amount = 10) => {
+  const passphrases = Array.from({ length: amount }, () => generatePassphraseUsingConfig())
+  return passphrases
+}
+
+const { toast } = useToast()
+
+const onBulkGenerateAndCopy = () => {
+  const passphrases = bulkGenerate()
+  const text = passphrases.join('\n')
+  navigator.clipboard.writeText(text)
+
+  toast({
+    title: 'Passphrases copied to clipboard',
+    description: 'Bulk generated 10 random passphrases',
+    variant: 'default',
+    type: 'foreground',
+  })
+}
+
 const { g, c /* keys you want to monitor */ } = useMagicKeys()
 
-// TODO: disable when custo separator input focused
+// TODO: disable when custom separator input focused
 const activeEl = useActiveElement()
 const isBodyActive = computed(() => activeEl.value?.tagName === 'BODY')
 const isCopyBtnActive = computed(() => activeEl.value?.id === 'copy-btn')
@@ -184,23 +219,32 @@ whenever(c, () => {
 <template>
   <div>
     <div class="w-fullmt-[10vh]">
-      <h2 class="text-4xl font-mono leading-snug text-center text-balance mb-12 max-w-4xl mx-auto ">
+      <h2 class="text-2xl md:text-4xl font-mono leading-snug text-center text-balance mb-4 md:mb-10 max-w-4xl mx-auto ">
         Sleek passphrase generator
       </h2>
 
-      <button
-        class="block w-full max-w-4xl mx-auto"
-        @click="selectAndCopyPassphrase"
-      >
-        <!-- TODO: text balance not working with span for each char, or v-html -->
-        <div
-          ref="passphraseEl"
-          class="selection:bg-indigo-900 break-all flex flex-wrap justify-center content-center gap-y-0 tracking-wide leading-[1.5] font-mono text-center w-full rounded-lg border border-input bg-background px-3 py-3.5 min-h-[138px] text-2xl ring-offset-background"
-          v-html="passphraseHtml"
-        />
-      </button>
+      <div class="block w-full max-w-4xl mx-auto">
+        <div class="flex justify-end mb-3 mr-2">
+          <Badge v-if="isDefined(calculatedEntropy)" variant="outline">
+            <span class="tabular-nums mr-1">{{ calculatedEntropy }}</span> bits of entropy
+          </Badge>
+        </div>
 
-      <div class="mt-4 grid grid-cols-4 gap-x-4 gap-y-5 items-end max-w-2xl mx-auto ">
+        <button
+          class="w-full"
+          @click="selectAndCopyPassphrase"
+        >
+          <!-- TODO: text balance not working with span for each char, or v-html -->
+          <div
+            ref="passphraseEl"
+            class="selection:bg-indigo-900 break-all flex flex-wrap justify-center content-center gap-y-0 tracking-wide leading-[1.5] font-mono text-center w-full rounded-lg border border-input bg-background px-5 py-3.5 min-h-[140px] text-2xl ring-offset-background"
+            v-html="passphraseHtml"
+          />
+        </button>
+      </div>
+
+      <!-- TODO: there is a shift on inital load -->
+      <div class="mt-4 grid md:grid-cols-4 gap-x-4 gap-y-5 items-end max-w-2xl mx-auto ">
         <div class="col-span-2 flex flex-col gap-2">
           <div class="flex items-center justify-between">
             <Label class="text-sm">Words</Label>
@@ -238,20 +282,12 @@ whenever(c, () => {
         </BaseTooltip>
 
         <!-- TODO: shift when custom selected, with cookie on first load -->
-        <div class="flex items-end gap-2">
+        <div class="col-span-2 flex items-end gap-2">
           <div class="flex flex-col gap-1.5 grow">
             <Label>Separator</Label>
             <Select v-model="separator">
               <SelectTrigger class="text-left">
-                <SelectValue placeholder="Separator">
-                  <!-- <div v-if="selectedSeparator">
-                    <span class="w-full">{{ selectedSeparator.label }}</span>
-                    <span
-                      v-if="isSpecialSeparatorSelected"
-                      class="text-muted-foreground ml-1 font-mono"
-                    >({{ selectedSeparator?.symbol }})</span>
-                  </div> -->
-                </SelectValue>
+                <SelectValue placeholder="Separator" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup
@@ -310,44 +346,100 @@ whenever(c, () => {
           </div>
         </div>
 
-        <div class="flex flex-col items-start gap-2">
-          <Label>Case</Label>
-          <ToggleGroup v-model="casing" class="mx-0" type="single">
-            <BaseTooltip content="lowercase">
-              <ToggleGroupItem value="lower" aria-label="Toggle lowercase" :variant="casing === 'lower' ? 'primary' : 'outline'">
-                <Icon name="radix-icons:letter-case-lowercase" class="text-[1.25em]" />
-              </ToggleGroupItem>
-            </BaseTooltip>
-            <BaseTooltip content="UPPERCASE">
-              <ToggleGroupItem value="upper" aria-label="Toggle uppercase" :variant="casing === 'upper' ? 'primary' : 'outline'">
-                <Icon name="radix-icons:letter-case-uppercase" class="text-[1.25em]" />
-              </ToggleGroupItem>
-            </BaseTooltip>
-            <BaseTooltip content="Title Case">
-              <ToggleGroupItem value="capitalized" aria-label="Toggle title case" :variant="casing === 'capitalized' ? 'primary' : 'outline'">
-                <Icon name="radix-icons:letter-case-capitalize" class="text-[1.25em]" />
-              </ToggleGroupItem>
-            </BaseTooltip>
-          </ToggleGroup>
+        <div class="col-span-2 flex items-center gap-4">
+          <div class="flex flex-col items-start gap-2">
+            <div class="flex items-center">
+              <Label>Case</Label>
+
+              <BasePopover
+                side="top"
+                content-class="text-xs p-2"
+              >
+                <Icon class="ml-1 text-sm" name="ph:info" />
+
+                <template #content>
+                  <div>
+                    <p>Choose to apply specific case to each word.</p>
+                    <p>Case stays preserved when none are selected.</p>
+
+                    <p class="mt-2 mb-0.5">
+                      Options:
+                    </p>
+                    <ul class="list-disc list-inside">
+                      <li>
+                        <strong>lowercase</strong> - turn all words lowercase
+                      </li>
+                      <li>
+                        <strong>UPPERCASE</strong> - turn all words uppercase
+                      </li>
+                      <li>
+                        <strong>Title Case</strong> - capitalize first letter of each word
+                      </li>
+                      <li>
+                        <strong>mixed CASE</strong> - assigned random case to each word (preserved, lowercase, uppercase or title case)
+                      </li>
+                    </ul>
+                  </div>
+                </template>
+              </BasePopover>
+            </div>
+
+            <div class="col-span-2 flex items-center">
+              <ToggleGroup v-model="casing" class="mx-0" type="single">
+                <BaseTooltip content="lowercase">
+                  <ToggleGroupItem value="lowercase" aria-label="Toggle lowercase" :variant="casing === 'lowercase' ? 'primary' : 'outline'">
+                    <Icon name="radix-icons:letter-case-lowercase" class="text-[1.25em]" />
+                  </ToggleGroupItem>
+                </BaseTooltip>
+                <BaseTooltip content="UPPERCASE">
+                  <ToggleGroupItem value="uppercase" aria-label="Toggle uppercase" :variant="casing === 'uppercase' ? 'primary' : 'outline'">
+                    <Icon name="radix-icons:letter-case-uppercase" class="text-[1.25em]" />
+                  </ToggleGroupItem>
+                </BaseTooltip>
+                <BaseTooltip content="Title Case">
+                  <ToggleGroupItem value="titlecase" aria-label="Toggle title case" :variant="casing === 'titlecase' ? 'primary' : 'outline'">
+                    <Icon name="radix-icons:letter-case-capitalize" class="text-[1.25em]" />
+                  </ToggleGroupItem>
+                </BaseTooltip>
+                <BaseTooltip content="Mixed case">
+                  <ToggleGroupItem value="mixed" aria-label="Toggle mixed case" :variant="casing === 'mixed' ? 'primary' : 'outline'">
+                    <Icon name="radix-icons:letter-case-toggle" class="text-[1.25em]" />
+                  </ToggleGroupItem>
+                </BaseTooltip>
+              </ToggleGroup>
+            </div>
+          </div>
+
+          <div class="flex flex-col items-start gap-2">
+            <Label>Extras</Label>
+
+            <div class="flex items-center gap-1">
+              <BaseTooltip :content="isHidden ? 'Show' : 'Hide'">
+                <Toggle v-model="isHidden" variant="outline" aria-label="Hide passphrase" @click="isHidden = !isHidden">
+                  <Icon :name=" isHidden ? 'ph:eye' : 'ph:eye-slash'" class="text-[1.25em]" />
+                </Toggle>
+              </BaseTooltip>
+
+              <BaseTooltip content="Include number">
+                <Toggle
+                  v-model="includeNumber"
+                  :variant="includeNumber ? 'primary' : 'outline'"
+                  aria-label="Include number"
+                  :disabled="isSeparatorRandomNumbers"
+                  @click="includeNumber = !includeNumber"
+                >
+                  <Icon name="ph:number-nine" class="text-[1.25em]" />
+                </Toggle>
+              </BaseTooltip>
+            </div>
+          </div>
         </div>
 
-        <div class="flex gap-1">
-          <BaseTooltip :content="isHidden ? 'Show' : 'Hide'">
-            <Toggle v-model="isHidden" variant="outline" aria-label="Hide passphrase" @click="isHidden = !isHidden">
-              <Icon :name=" isHidden ? 'ph:eye' : 'ph:eye-slash'" class="text-[1.25em]" />
-            </Toggle>
-          </BaseTooltip>
-          <BaseTooltip content="Include number">
-            <!-- TODO: disable not working live -->
-            <Toggle
-              v-model="includeNumber"
-              :variant="includeNumber ? 'secondary' : 'outline'"
-              aria-label="Include number"
-              :disabled="isSeparatorRandomNumbers"
-              @click="includeNumber = !includeNumber"
-            >
-              <Icon name="ph:number-nine" class="text-[1.25em]" />
-            </Toggle>
+        <div class="col-span-2">
+          <BaseTooltip content="Bulk generate 10 passphrases">
+            <Button id="bulk-generate-btn" variant="secondary" class="w-full" size="default" @click="onBulkGenerateAndCopy">
+              Bulk generate to clipboard
+            </Button>
           </BaseTooltip>
         </div>
       </div>

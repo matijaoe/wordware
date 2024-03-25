@@ -1,5 +1,6 @@
 import { titleCase } from 'scule'
 import { getRandomValues } from 'uncrypto'
+import type { WordCasingOption } from '~/models'
 
 /**
  * {@link https://www.reddit.com/r/crypto/comments/4xe21s/comment/d6fduhd}
@@ -20,48 +21,43 @@ export function secureRandom(count: number) {
   return result % count
 }
 
+// TODO: improve options
 export const generatePassphrase = (props: {
   wordlist: string[]
   count: number
-  // TODO: handle random numbers as separators
   separator?: string
-  randomNumbersAsSeparator?: boolean // TODO: allow character length?
-  casing?: 'lower' | 'upper' | 'capitalized' // TODO: add mixed
+  randomNumbersAsSeparator?: boolean
+  randomNumberAsSeparatorDigits?: number
+  casing?: WordCasingOption
   includeNumber?: boolean
+  includeNumberPosition?: 'start' | 'end' // undefined means randomly choses start or end
 }) => {
   const {
     wordlist,
     count = 5,
     separator = ' ',
     randomNumbersAsSeparator,
-    casing = 'lower',
+    randomNumberAsSeparatorDigits = 2,
+    casing = 'preserve',
     includeNumber = false,
+    includeNumberPosition,
   } = props
   const listLength = wordlist.length
 
   const words = []
   for (let i = 0; i < count; i++) {
     const number = secureRandom(listLength)
-    let word = wordlist.at(number)!
-    switch (casing) {
-      case 'lower':
-        word = word.toLowerCase()
-        break
-      case 'upper':
-        word = word.toUpperCase()
-        break
-      case 'capitalized':
-        word = titleCase(word)
-        break
-    }
-    words.push(word)
+    const word = wordlist.at(number)!
+    const wordWithCase = applyWordCasing(word, casing)
+    words.push(wordWithCase)
   }
 
   if (includeNumber) {
-    const numberPosition = secureRandom(count)
-    const number = secureRandom(10)
+    const numberPosition = secureRandom(words.length)
+    const number = secureRandom(10) // 0-9
+
     const positions = ['start', 'end'] as const
-    const position = positions[secureRandom(positions.length)]
+    const position = includeNumberPosition ?? positions[secureRandom(positions.length)]
     words[numberPosition] = position === 'start'
       ? `${number}${words[numberPosition]}`
       : `${words[numberPosition]}${number}`
@@ -75,19 +71,37 @@ export const generatePassphrase = (props: {
       const isLastWord = i === count - 1
 
       if (!isLastWord) {
-        // TODO: improve on this
-        const EXACT_DIGITS = 2
-        const numberSeparator = generateExactDigitsNumber(EXACT_DIGITS)
+        const numberSeparator = generateExactDigitsNumber(randomNumberAsSeparatorDigits)
         passphraseParts.push(numberSeparator)
       }
     }
     return passphraseParts.join('')
   }
 
-  // TODO: return also as array of parts so frontend could do finer styling
   const passphrase = words.join(separator)
   return passphrase
 }
+
+const applyWordCasing = (word: string, casing: WordCasingOption) => {
+  let _casing: Omit<WordCasingOption, 'mixed'> = casing === 'mixed' ? 'preserve' : casing
+  if (casing === 'mixed') {
+    const wordCaseOptions: Omit<WordCasingOption, 'mixed'>[] = ['preserve', 'lowercase', 'uppercase', 'titlecase']
+    _casing = wordCaseOptions[secureRandom(wordCaseOptions.length)]
+  }
+
+  switch (_casing) {
+    case 'lowercase':
+      return word.toLowerCase()
+    case 'uppercase':
+      return word.toUpperCase()
+    case 'titlecase':
+      return titleCase(word)
+    case 'preserve':
+    default:
+      return word
+  }
+}
+
 export const generateDicewarePassphrase = (props: {
   wordlist: string[]
   count: number

@@ -1,6 +1,6 @@
 <template>
   <div class="grid grid-cols-2 gap-8">
-    <div class="p-8 pr-0">
+    <div class="p-4 sm:p-8 pr-0">
       <Header />
 
       <main class="mt-6">

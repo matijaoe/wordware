@@ -6,6 +6,9 @@ definePageMeta({
 const route = useRoute('wordlists-slug')
 
 const { wordlist, constructedDescription, words } = useWordlist(() => route.params.slug)
+
+// TODO: add tooltips to each stat
+// https://github.com/sts10/wla/tree/main
 </script>
 
 <template>
@@ -74,6 +77,14 @@ const { wordlist, constructedDescription, words } = useWordlist(() => route.para
           </InfoItem>
 
           <InfoItem
+            v-if=" wordlist.stats.canBeShortened"
+            :wrapper="false"
+            label="Assumed entropy per character"
+          >
+            {{ wordlist.stats.assumedEntropyPerCharacter }} bits
+          </InfoItem>
+
+          <InfoItem
             :wrapper="false"
             label="Shortest word"
           >
@@ -95,19 +106,104 @@ const { wordlist, constructedDescription, words } = useWordlist(() => route.para
           >
             {{ wordlist.stats.longestSharedPrefix }} characters
           </InfoItem>
+
+          <!-- TODO: show canBeShortened? -->
           <InfoItem
             :wrapper="false"
-            label="Unique shared prefix"
+            label="Unique character prefix"
           >
-            {{ wordlist.stats.canBeShortened ? `${wordlist.stats.uniqueCharacterPrefix} characters` : '-' }}
+            {{ wordlist.stats.uniqueCharacterPrefix }} characters
           </InfoItem>
 
           <InfoItem
-            v-if=" wordlist.stats.canBeShortened"
             :wrapper="false"
-            label="Entropy per character (unique prefix)"
+            label="Free of exact duplicates"
           >
-            {{ wordlist.stats.entropyPerUniqueCharacterPrefix }} bits
+            {{ !wordlist.stats.hasDuplicatesExact }}
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Free of fuzzy duplicates"
+          >
+            {{ !wordlist.stats.hasDuplicatesFuzzy }}
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Unique words (exact)"
+          >
+            {{ wordlist.stats.uniqueWordsFoundExact.toLocaleString() }}
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Unique words (fuzzy)"
+          >
+            {{ wordlist.stats.uniqueWordsFoundFuzzy.toLocaleString() }}
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Unique characters (exact)"
+          >
+            {{ wordlist.stats.uniqueCharactersExact.toLocaleString() }}
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Unique characters (fuzzy)"
+          >
+            {{ wordlist.stats.uniqueCharactersFuzzy.toLocaleString() }}
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Free of non-ASCII characters"
+          >
+            {{ wordlist.stats.hasNonAsciiCharacters }}
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Consistent case"
+          >
+            {{ wordlist.stats.hasConsistentCase }}
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="All lowercase"
+          >
+            {{ wordlist.stats.isAllLowercase }}
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Has numbers"
+          >
+            {{ wordlist.stats.hasNumbers }}
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Free of prefix words"
+          >
+            {{ wordlist.stats.freeOfPrefixWords }}
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Free of suffix words"
+          >
+            {{ wordlist.stats.freeOfSuffixWords }}
+          </InfoItem>
+
+          <InfoItem
+            :wrapper="false"
+            label="Above brute-force line"
+          >
+            {{ wordlist.stats.isAboveBruteForceLine }}
           </InfoItem>
         </div>
       </div>
