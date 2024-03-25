@@ -78,7 +78,6 @@ export const generatePassphrase = (props: {
     return passphraseParts.join('')
   }
 
-  // TODO: return also as array of parts so frontend could do finer styling
   const passphrase = words.join(separator)
   return passphrase
 }

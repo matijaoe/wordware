@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import type { WordlistSlug } from '~/models/wordlist'
+import { useToast } from '@/components/ui/toast/use-toast'
 import type { WordCasingOption } from '~/models'
+import type { WordlistSlug } from '~/models/wordlist'
 
 const selectedList = useCookie<WordlistSlug>('selected-wordlist', { default: () => 'eff-long' })
 const { selectedLists } = useWordlistSelection()
@@ -64,6 +65,7 @@ function useCustomSeparator() {
       return
     }
 
+    // still issues sometime when switching to option and inputing first char, it isnt set
     // customSeparator.value ||= DEFAULT_CUSTOM_SEPARATOR
 
     if (val.length > 1) {
@@ -125,13 +127,12 @@ const calculatedEntropy = computed(() => {
 // TODO: ls not working
 const casing = useCookie<WordCasingOption>('passphrase:casing', { default: () => 'preserve' })
 
-const setNewPassphrase = () => {
-  // TODO: turn to computed
+const generatePassphraseUsingConfig = () => {
   const _separator = isSeparatorCustom.value
     ? customSeparator.value
     : selectedSeparator.value?.symbol ?? EMPTY_SPACE
 
-  passphrase.value = generatePassphrase({
+  return generatePassphrase({
     wordlist: wordlistWords.value,
     count: wordCount.value,
     separator: _separator,
@@ -143,12 +144,14 @@ const setNewPassphrase = () => {
   })
 }
 
-// wrapped in onMounted because of hydration errors otherwise (2 differrent passphrases shown one after another on first load)
-onMounted(() => {
-  watchEffect(() => {
-    setNewPassphrase()
-  })
+const setNewPassphrase = () => {
+  passphrase.value = generatePassphraseUsingConfig()
+}
+
+watchEffect(() => {
+  setNewPassphrase()
 })
+// })
 
 const passphraseEl = ref<HTMLDivElement>()
 
@@ -171,6 +174,26 @@ const copyPassphrase = () => {
 const selectAndCopyPassphrase = () => {
   selectPassphrase()
   copyPassphrase()
+}
+
+const bulkGenerate = (amount = 10) => {
+  const passphrases = Array.from({ length: amount }, () => generatePassphraseUsingConfig())
+  return passphrases
+}
+
+const { toast } = useToast()
+
+const onBulkGenerateAndCopy = () => {
+  const passphrases = bulkGenerate()
+  const text = passphrases.join('\n')
+  navigator.clipboard.writeText(text)
+
+  toast({
+    title: 'Passphrases copied to clipboard',
+    description: 'Bulk generated 10 random passphrases',
+    variant: 'default',
+    type: 'foreground',
+  })
 }
 
 const { g, c /* keys you want to monitor */ } = useMagicKeys()
@@ -214,12 +237,13 @@ whenever(c, () => {
           <!-- TODO: text balance not working with span for each char, or v-html -->
           <div
             ref="passphraseEl"
-            class="selection:bg-indigo-900 break-all flex flex-wrap justify-center content-center gap-y-0 tracking-wide leading-[1.5] font-mono text-center w-full rounded-lg border border-input bg-background px-3 py-3.5 min-h-[138px] text-2xl ring-offset-background"
+            class="selection:bg-indigo-900 break-all flex flex-wrap justify-center content-center gap-y-0 tracking-wide leading-[1.5] font-mono text-center w-full rounded-lg border border-input bg-background px-5 py-3.5 min-h-[140px] text-2xl ring-offset-background"
             v-html="passphraseHtml"
           />
         </button>
       </div>
 
+      <!-- TODO: there is a shift on inital load -->
       <div class="mt-4 grid md:grid-cols-4 gap-x-4 gap-y-5 items-end max-w-2xl mx-auto ">
         <div class="col-span-2 flex flex-col gap-2">
           <div class="flex items-center justify-between">
@@ -263,15 +287,7 @@ whenever(c, () => {
             <Label>Separator</Label>
             <Select v-model="separator">
               <SelectTrigger class="text-left">
-                <SelectValue placeholder="Separator">
-                  <!-- <div v-if="selectedSeparator">
-                    <span class="w-full">{{ selectedSeparator.label }}</span>
-                    <span
-                      v-if="isSpecialSeparatorSelected"
-                      class="text-muted-foreground ml-1 font-mono"
-                    >({{ selectedSeparator?.symbol }})</span>
-                  </div> -->
-                </SelectValue>
+                <SelectValue placeholder="Separator" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup
@@ -417,6 +433,14 @@ whenever(c, () => {
               </BaseTooltip>
             </div>
           </div>
+        </div>
+
+        <div class="col-span-2">
+          <BaseTooltip content="Bulk generate 10 passphrases">
+            <Button id="bulk-generate-btn" variant="secondary" class="w-full" size="default" @click="onBulkGenerateAndCopy">
+              Bulk generate to clipboard
+            </Button>
+          </BaseTooltip>
         </div>
       </div>
     </div>
