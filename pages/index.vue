@@ -6,7 +6,6 @@ const selectedList = useCookie<WordlistSlug>('selected-wordlist', { default: () 
 const { selectedLists } = useWordlistSelection()
 const { words: wordlistWords, wordlist: currentWordlist } = useWordlist(selectedList)
 
-
 const wordCount = useCookie<number>('passphrase:word-count', { default: () => 6 })
 const wordCountModel = computed<number[]>({
   get: () => [wordCount.value],
@@ -27,6 +26,7 @@ const {
   separatorOptions,
 } = useSeparators()
 
+// rename to delimiter?
 const separator = useCookie<SeparatorValue>('passphrase:separator', { default: () => 'space' })
 const selectedSeparator = computed(() => separatorOptions.find((item) => item.value === separator.value))
 const isSeparatorCustom = computed(() => separator.value === '<CUSTOM>')

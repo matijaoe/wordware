@@ -52,7 +52,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 6.99,
         "entropyPerWord": 12.925,
         "efficiencyPerCharacter": 1.849,
-        "entropyPerUniqueCharacterPrefix": 1.436,
+        "assumedEntropyPerCharacter": 4.308,
         "longestWordExample": "zoologist",
         "shortestWordExample": "zit",
         "shortestWordLength": 3,
@@ -60,7 +60,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 8,
         "uniqueCharacterPrefix": 9,
         "canBeShortened": false,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 7776,
+        "uniqueWordsFoundFuzzy": 7776,
+        "uniqueCharactersExact": 27,
+        "uniqueCharactersFuzzy": 27,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": true,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -112,7 +124,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 4.54,
         "entropyPerWord": 10.34,
         "efficiencyPerCharacter": 2.278,
-        "entropyPerUniqueCharacterPrefix": 2.068,
+        "assumedEntropyPerCharacter": 3.447,
         "longestWordExample": "zippy",
         "shortestWordExample": "yam",
         "shortestWordLength": 3,
@@ -120,7 +132,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 4,
         "uniqueCharacterPrefix": 5,
         "canBeShortened": false,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 1296,
+        "uniqueWordsFoundFuzzy": 1296,
+        "uniqueCharactersExact": 27,
+        "uniqueCharactersFuzzy": 27,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": true,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -172,7 +196,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 7.32,
         "entropyPerWord": 10.34,
         "efficiencyPerCharacter": 1.413,
-        "entropyPerUniqueCharacterPrefix": 3.447,
+        "assumedEntropyPerCharacter": 3.447,
         "longestWordExample": "wrongdoing",
         "shortestWordExample": "pry",
         "shortestWordLength": 3,
@@ -180,7 +204,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 2,
         "uniqueCharacterPrefix": 3,
         "canBeShortened": true,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 1296,
+        "uniqueWordsFoundFuzzy": 1296,
+        "uniqueCharactersExact": 27,
+        "uniqueCharactersFuzzy": 27,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": true,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -232,7 +268,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 4.23,
         "entropyPerWord": 12.925,
         "efficiencyPerCharacter": 3.056,
-        "entropyPerUniqueCharacterPrefix": 2.154,
+        "assumedEntropyPerCharacter": 12.925,
         "longestWordExample": "zigzag",
         "shortestWordExample": "@",
         "shortestWordLength": 1,
@@ -240,7 +276,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 5,
         "uniqueCharacterPrefix": 6,
         "canBeShortened": false,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 7776,
+        "uniqueWordsFoundFuzzy": 7776,
+        "uniqueCharactersExact": 55,
+        "uniqueCharactersFuzzy": 55,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": true,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": false
       }
     }
   ],
@@ -292,7 +340,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 4.24,
         "entropyPerWord": 12.925,
         "efficiencyPerCharacter": 3.048,
-        "entropyPerUniqueCharacterPrefix": 2.154,
+        "assumedEntropyPerCharacter": 12.925,
         "longestWordExample": "zurich",
         "shortestWordExample": "@",
         "shortestWordLength": 1,
@@ -300,7 +348,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 5,
         "uniqueCharacterPrefix": 6,
         "canBeShortened": false,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 7776,
+        "uniqueWordsFoundFuzzy": 7776,
+        "uniqueCharactersExact": 54,
+        "uniqueCharactersFuzzy": 54,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": true,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": false
       }
     }
   ],
@@ -349,7 +409,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 5.4,
         "entropyPerWord": 11,
         "efficiencyPerCharacter": 2.037,
-        "entropyPerUniqueCharacterPrefix": 2.75,
+        "assumedEntropyPerCharacter": 3.667,
         "longestWordExample": "universe",
         "shortestWordExample": "zoo",
         "shortestWordLength": 3,
@@ -357,7 +417,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 3,
         "uniqueCharacterPrefix": 4,
         "canBeShortened": true,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 2048,
+        "uniqueWordsFoundFuzzy": 2048,
+        "uniqueCharactersExact": 26,
+        "uniqueCharactersFuzzy": 26,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -405,7 +477,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 6.06,
         "entropyPerWord": 10,
         "efficiencyPerCharacter": 1.65,
-        "entropyPerUniqueCharacterPrefix": 2.5,
+        "assumedEntropyPerCharacter": 2.5,
         "longestWordExample": "withdraw",
         "shortestWordExample": "zero",
         "shortestWordLength": 4,
@@ -413,7 +485,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 3,
         "uniqueCharacterPrefix": 4,
         "canBeShortened": true,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 1024,
+        "uniqueWordsFoundFuzzy": 1024,
+        "uniqueCharactersExact": 26,
+        "uniqueCharactersFuzzy": 26,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": true,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -461,7 +545,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 7.98,
         "entropyPerWord": 14.101,
         "efficiencyPerCharacter": 1.767,
-        "entropyPerUniqueCharacterPrefix": 0.94,
+        "assumedEntropyPerCharacter": 4.7,
         "longestWordExample": "troubleshooting",
         "shortestWordExample": "zoo",
         "shortestWordLength": 3,
@@ -469,7 +553,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 14,
         "uniqueCharacterPrefix": 15,
         "canBeShortened": false,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 17576,
+        "uniqueWordsFoundFuzzy": 17576,
+        "uniqueCharactersExact": 26,
+        "uniqueCharactersFuzzy": 26,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -517,7 +613,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 7.05,
         "entropyPerWord": 12.925,
         "efficiencyPerCharacter": 1.833,
-        "entropyPerUniqueCharacterPrefix": 1.293,
+        "assumedEntropyPerCharacter": 4.308,
         "longestWordExample": "worthwhile",
         "shortestWordExample": "zoo",
         "shortestWordLength": 3,
@@ -525,7 +621,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 9,
         "uniqueCharacterPrefix": 10,
         "canBeShortened": false,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 7776,
+        "uniqueWordsFoundFuzzy": 7776,
+        "uniqueCharactersExact": 26,
+        "uniqueCharactersFuzzy": 26,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -582,7 +690,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 7.05,
         "entropyPerWord": 12.925,
         "efficiencyPerCharacter": 1.833,
-        "entropyPerUniqueCharacterPrefix": 1.293,
+        "assumedEntropyPerCharacter": 4.308,
         "longestWordExample": "worthwhile",
         "shortestWordExample": "zoo",
         "shortestWordLength": 3,
@@ -590,7 +698,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 9,
         "uniqueCharacterPrefix": 10,
         "canBeShortened": false,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 7776,
+        "uniqueWordsFoundFuzzy": 7776,
+        "uniqueCharactersExact": 26,
+        "uniqueCharactersFuzzy": 26,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -647,7 +767,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 4.12,
         "entropyPerWord": 10.34,
         "efficiencyPerCharacter": 2.51,
-        "entropyPerUniqueCharacterPrefix": 1.477,
+        "assumedEntropyPerCharacter": 3.447,
         "longestWordExample": "stopped",
         "shortestWordExample": "zoo",
         "shortestWordLength": 3,
@@ -655,7 +775,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 6,
         "uniqueCharacterPrefix": 7,
         "canBeShortened": false,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 1296,
+        "uniqueWordsFoundFuzzy": 1296,
+        "uniqueCharactersExact": 26,
+        "uniqueCharactersFuzzy": 26,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -712,7 +844,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 4.24,
         "entropyPerWord": 10.34,
         "efficiencyPerCharacter": 2.439,
-        "entropyPerUniqueCharacterPrefix": 1.477,
+        "assumedEntropyPerCharacter": 3.447,
         "longestWordExample": "referred",
         "shortestWordExample": "zoo",
         "shortestWordLength": 3,
@@ -720,7 +852,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 6,
         "uniqueCharacterPrefix": 7,
         "canBeShortened": true,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 1296,
+        "uniqueWordsFoundFuzzy": 1296,
+        "uniqueCharactersExact": 26,
+        "uniqueCharactersFuzzy": 26,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -768,7 +912,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 7.12,
         "entropyPerWord": 14.162,
         "efficiencyPerCharacter": 1.989,
-        "entropyPerUniqueCharacterPrefix": 1.416,
+        "assumedEntropyPerCharacter": 4.721,
         "longestWordExample": "zoological",
         "shortestWordExample": "zoo",
         "shortestWordLength": 3,
@@ -776,7 +920,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 9,
         "uniqueCharacterPrefix": 10,
         "canBeShortened": false,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 18325,
+        "uniqueWordsFoundFuzzy": 18325,
+        "uniqueCharactersExact": 26,
+        "uniqueCharactersFuzzy": 26,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": false
       }
     }
   ],
@@ -824,7 +980,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 6.2,
         "entropyPerWord": 14.162,
         "efficiencyPerCharacter": 2.284,
-        "entropyPerUniqueCharacterPrefix": 1.77,
+        "assumedEntropyPerCharacter": 4.721,
         "longestWordExample": "zwieback",
         "shortestWordExample": "you",
         "shortestWordLength": 3,
@@ -832,7 +988,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 7,
         "uniqueCharacterPrefix": 8,
         "canBeShortened": false,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 18328,
+        "uniqueWordsFoundFuzzy": 18328,
+        "uniqueCharactersExact": 26,
+        "uniqueCharactersFuzzy": 26,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": false
       }
     }
   ],
@@ -880,7 +1048,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 7.08,
         "entropyPerWord": 10.434,
         "efficiencyPerCharacter": 1.474,
-        "entropyPerUniqueCharacterPrefix": 0.745,
+        "assumedEntropyPerCharacter": 5.217,
         "longestWordExample": "gaymuthafuckinwhore",
         "shortestWordExample": "wn",
         "shortestWordLength": 2,
@@ -888,7 +1056,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 13,
         "uniqueCharacterPrefix": 14,
         "canBeShortened": true,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 1383,
+        "uniqueWordsFoundFuzzy": 1383,
+        "uniqueCharactersExact": 31,
+        "uniqueCharactersFuzzy": 31,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": true,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": false
       }
     }
   ],
@@ -936,7 +1116,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 6.98,
         "entropyPerWord": 12.892,
         "efficiencyPerCharacter": 1.847,
-        "entropyPerUniqueCharacterPrefix": 1.432,
+        "assumedEntropyPerCharacter": 4.297,
         "longestWordExample": "impressive",
         "shortestWordExample": "zit",
         "shortestWordLength": 3,
@@ -944,7 +1124,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 8,
         "uniqueCharacterPrefix": 9,
         "canBeShortened": true,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 7603,
+        "uniqueWordsFoundFuzzy": 7603,
+        "uniqueCharactersExact": 27,
+        "uniqueCharactersFuzzy": 27,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -992,7 +1184,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 4.61,
         "entropyPerWord": 9,
         "efficiencyPerCharacter": 1.952,
-        "entropyPerUniqueCharacterPrefix": 1.8,
+        "assumedEntropyPerCharacter": 3,
         "longestWordExample": "zippy",
         "shortestWordExample": "try",
         "shortestWordLength": 3,
@@ -1000,7 +1192,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 4,
         "uniqueCharacterPrefix": 5,
         "canBeShortened": false,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 512,
+        "uniqueWordsFoundFuzzy": 512,
+        "uniqueCharactersExact": 26,
+        "uniqueCharactersFuzzy": 26,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": true,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -1048,7 +1252,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 6.05,
         "entropyPerWord": 10.667,
         "efficiencyPerCharacter": 1.763,
-        "entropyPerUniqueCharacterPrefix": 3.556,
+        "assumedEntropyPerCharacter": 2.667,
         "longestWordExample": "verification",
         "shortestWordExample": "zoom",
         "shortestWordLength": 4,
@@ -1056,7 +1260,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 2,
         "uniqueCharacterPrefix": 3,
         "canBeShortened": true,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 1626,
+        "uniqueWordsFoundFuzzy": 1626,
+        "uniqueCharactersExact": 26,
+        "uniqueCharactersFuzzy": 26,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": true,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -1104,7 +1320,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 6.05,
         "entropyPerWord": 10.667,
         "efficiencyPerCharacter": 1.763,
-        "entropyPerUniqueCharacterPrefix": 3.556,
+        "assumedEntropyPerCharacter": 2.667,
         "longestWordExample": "verification",
         "shortestWordExample": "zoom",
         "shortestWordLength": 4,
@@ -1112,7 +1328,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 2,
         "uniqueCharacterPrefix": 3,
         "canBeShortened": true,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 1626,
+        "uniqueWordsFoundFuzzy": 1626,
+        "uniqueCharactersExact": 26,
+        "uniqueCharactersFuzzy": 26,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": true,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -1160,7 +1388,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 6.8,
         "entropyPerWord": 10.673,
         "efficiencyPerCharacter": 1.57,
-        "entropyPerUniqueCharacterPrefix": 1.525,
+        "assumedEntropyPerCharacter": 3.558,
         "longestWordExample": "ski      ",
         "shortestWordExample": "yes",
         "shortestWordLength": 3,
@@ -1168,7 +1396,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 6,
         "uniqueCharacterPrefix": 7,
         "canBeShortened": true,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 1633,
+        "uniqueWordsFoundFuzzy": 1633,
+        "uniqueCharactersExact": 27,
+        "uniqueCharactersFuzzy": 27,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": true,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -1216,7 +1456,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 5.1,
         "entropyPerWord": 12.6,
         "efficiencyPerCharacter": 2.471,
-        "entropyPerUniqueCharacterPrefix": 2.1,
+        "assumedEntropyPerCharacter": 4.2,
         "longestWordExample": "whisky ",
         "shortestWordExample": "mum",
         "shortestWordLength": 3,
@@ -1224,7 +1464,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 5,
         "uniqueCharacterPrefix": 6,
         "canBeShortened": true,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 6210,
+        "uniqueWordsFoundFuzzy": 6210,
+        "uniqueCharactersExact": 52,
+        "uniqueCharactersFuzzy": 27,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": false,
+        "hasConsistentCase": false,
+        "hasNumbers": false,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ],
@@ -1272,7 +1524,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 6.59,
         "entropyPerWord": 13.288,
         "efficiencyPerCharacter": 2.016,
-        "entropyPerUniqueCharacterPrefix": 0.886,
+        "assumedEntropyPerCharacter": 13.288,
         "longestWordExample": "telecommunications",
         "shortestWordExample": "z",
         "shortestWordLength": 1,
@@ -1280,7 +1532,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 14,
         "uniqueCharacterPrefix": 15,
         "canBeShortened": true,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 10000,
+        "uniqueWordsFoundFuzzy": 10000,
+        "uniqueCharactersExact": 26,
+        "uniqueCharactersFuzzy": 26,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": false
       }
     }
   ],
@@ -1328,7 +1592,7 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "meanWordLength": 6.31,
         "entropyPerWord": 13,
         "efficiencyPerCharacter": 2.06,
-        "entropyPerUniqueCharacterPrefix": 1.444,
+        "assumedEntropyPerCharacter": 4.333,
         "longestWordExample": "youngster",
         "shortestWordExample": "you",
         "shortestWordLength": 3,
@@ -1336,7 +1600,19 @@ export const WordlistMap = new Map<WordlistSlug, Wordlist>([
         "longestSharedPrefix": 8,
         "uniqueCharacterPrefix": 9,
         "canBeShortened": false,
-        "hasDuplicates": false
+        "hasDuplicatesExact": false,
+        "hasDuplicatesFuzzy": false,
+        "uniqueWordsFoundExact": 8192,
+        "uniqueWordsFoundFuzzy": 8192,
+        "uniqueCharactersExact": 26,
+        "uniqueCharactersFuzzy": 26,
+        "hasNonAsciiCharacters": false,
+        "isAllLowercase": true,
+        "hasConsistentCase": true,
+        "hasNumbers": false,
+        "freeOfPrefixWords": false,
+        "freeOfSuffixWords": false,
+        "isAboveBruteForceLine": true
       }
     }
   ]

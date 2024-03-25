@@ -14,7 +14,7 @@ const exportTemplate = (content: string) => `export const WordlistMap = ${conten
 const baseOutputDir = 'constants/generated'
 
 const analyzeWordlist = async (wordlistSlug: WordlistSlug): Promise<{ sample: string[], stats: WordlistAnalysis } | undefined> => {
-  const words = Wordlists[camelCase(wordlistSlug)] as string[]
+  const words = Wordlists[camelCase(wordlistSlug)]
 
   if (!words) {
     return undefined
@@ -43,32 +43,93 @@ const analyzeWordlist = async (wordlistSlug: WordlistSlug): Promise<{ sample: st
   const longestSharedPrefix = Anal.findLongestSharedPrefix(words)
   const uniqueCharacterPrefix = Anal.uniqueCharacterPrefix(words)
   const canBeShortened = Anal.canBeShortened(words)
-  const hasDuplicates = Anal.hasDuplicates(words)
 
   const efficiencyPerCharacter = Anal.efficiencyPerCharacter(words)
-  const entropyPerUniqueCharacterPrefix = Anal.assumedEntropyPerUniqueCharacterPrefix(words, uniqueCharacterPrefix)
+  const assumedEntropyPerCharacter = Anal.assumedEntropyPerCharacter(words, shortestWordLength)
+
+  const hasDuplicatesExact = Anal.hasDuplicatesExact(words)
+  const hasDuplicatesFuzzy = Anal.hasDuplicatesFuzzy(words)
+  const uniqueWordsFoundExact = Anal.countUniqueWordsExact(words)
+  const uniqueWordsFoundFuzzy = Anal.countUniqueWordsExact(words)
+  const uniqueCharactersExact = Anal.countUniqueCharacters(words)
+  const uniqueCharactersFuzzy = Anal.countUniqueCharacters(words, true)
+
+  const hasNonAsciiCharacters = Anal.hasNonAsciiCharacters(words)
+  const isAllLowercase = Anal.isAllLowercase(words)
+  const hasConsistentCase = Anal.hasConsistentCase(words)
+  const hasNumbers = Anal.includesDigits(words)
+
+  const freeOfPrefixWords = !Anal.hasPrefixWords(words)
+  const freeOfSuffixWords = !Anal.hasSuffixWords(words)
+
+  const isAboveBruteForceLine = Anal.isAboveBruteForceLine(words, shortestWordLength)
 
   const stats = {
     words: wordCount,
     meanWordLength,
+    // entropy
     entropyPerWord,
     efficiencyPerCharacter,
-    entropyPerUniqueCharacterPrefix,
+    assumedEntropyPerCharacter,
+    // shortest and longest
     longestWordExample,
     shortestWordExample,
     shortestWordLength,
     longestWordLength,
+    // prefix characters
     longestSharedPrefix,
     uniqueCharacterPrefix,
     canBeShortened,
-    hasDuplicates,
-  }
+    // duplicates and unique words
+    hasDuplicatesExact,
+    hasDuplicatesFuzzy,
+    uniqueWordsFoundExact,
+    uniqueWordsFoundFuzzy,
+    uniqueCharactersExact,
+    uniqueCharactersFuzzy,
+    // ascii
+    hasNonAsciiCharacters,
+    isAllLowercase,
+    hasConsistentCase,
+    hasNumbers,
+    // suffix and prefix words
+    freeOfPrefixWords,
+    freeOfSuffixWords,
+    // other
+    isAboveBruteForceLine,
+  } as WordlistAnalysis
 
   return {
     sample: words.slice(0, 30),
     stats,
   }
 }
+
+// TODO: Think of how to present to user
+//
+// Lines found               : 7776
+// Free of exact duplicates  : true
+// Free of fuzzy duplicates  : true
+// Free of blank lines       : true
+// Unique words found        : 7776
+// No start/end whitespace   : true
+// No non-ASCII characters   : true
+// Unicode normalized        : true
+// Free of prefix words      : true
+// Free of suffix words      : false
+// Uniquely decodable        : true
+// Above brute force line    : true
+// Length of shortest word   : 3 characters (aim)
+// Length of longest word    : 9 characters (zoologist)
+// Mean word length          : 6.99 characters
+// Entropy per word          : 12.925 bits
+// Efficiency per character  : 1.849 bits
+// Assumed entropy per char  : 4.308 bits
+// Shortest edit distance    : 1
+// Mean edit distance        : 6.858
+// Longest shared prefix     : 8
+// Unique character prefix   : 9
+// Kraft-McMillan inequality : satisfied
 
 const constructWordlistMap = async (): Promise<WordlistMapModel> => {
   console.time('analyzeWordlist')
