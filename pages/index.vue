@@ -196,21 +196,29 @@ whenever(c, () => {
 <template>
   <div>
     <div class="w-fullmt-[10vh]">
-      <h2 class="text-2xl md:text-4xl font-mono leading-snug text-center text-balance mb-6 md:mb-12 max-w-4xl mx-auto ">
+      <h2 class="text-2xl md:text-4xl font-mono leading-snug text-center text-balance mb-4 md:mb-10 max-w-4xl mx-auto ">
         Sleek passphrase generator
       </h2>
 
-      <button
-        class="block w-full max-w-4xl mx-auto"
-        @click="selectAndCopyPassphrase"
-      >
-        <!-- TODO: text balance not working with span for each char, or v-html -->
-        <div
-          ref="passphraseEl"
-          class="selection:bg-indigo-900 break-all flex flex-wrap justify-center content-center gap-y-0 tracking-wide leading-[1.5] font-mono text-center w-full rounded-lg border border-input bg-background px-3 py-3.5 min-h-[138px] text-2xl ring-offset-background"
-          v-html="passphraseHtml"
-        />
-      </button>
+      <div class="block w-full max-w-4xl mx-auto">
+        <div class="flex justify-end mb-3 mr-2">
+          <Badge v-if="isDefined(calculatedEntropy)" variant="outline">
+            <span class="tabular-nums mr-1">{{ calculatedEntropy }}</span> bits of entropy
+          </Badge>
+        </div>
+
+        <button
+          class="w-full"
+          @click="selectAndCopyPassphrase"
+        >
+          <!-- TODO: text balance not working with span for each char, or v-html -->
+          <div
+            ref="passphraseEl"
+            class="selection:bg-indigo-900 break-all flex flex-wrap justify-center content-center gap-y-0 tracking-wide leading-[1.5] font-mono text-center w-full rounded-lg border border-input bg-background px-3 py-3.5 min-h-[138px] text-2xl ring-offset-background"
+            v-html="passphraseHtml"
+          />
+        </button>
+      </div>
 
       <div class="mt-4 grid md:grid-cols-4 gap-x-4 gap-y-5 items-end max-w-2xl mx-auto ">
         <div class="col-span-2 flex flex-col gap-2">
@@ -322,87 +330,94 @@ whenever(c, () => {
           </div>
         </div>
 
-        <div class="col-span-2 flex flex-col items-start gap-2">
-          <div class="flex items-center">
-            <Label>Case</Label>
+        <div class="col-span-2 flex items-center gap-4">
+          <div class="flex flex-col items-start gap-2">
+            <div class="flex items-center">
+              <Label>Case</Label>
 
-            <BasePopover
-              side="top"
-              content-class="text-xs p-2"
-            >
-              <Icon class="ml-1 text-sm" name="ph:info" />
+              <BasePopover
+                side="top"
+                content-class="text-xs p-2"
+              >
+                <Icon class="ml-1 text-sm" name="ph:info" />
 
-              <template #content>
-                <div>
-                  <p>Choose to apply specific case to each word.</p>
-                  <p>Case stays preserved when none are selected.</p>
+                <template #content>
+                  <div>
+                    <p>Choose to apply specific case to each word.</p>
+                    <p>Case stays preserved when none are selected.</p>
 
-                  <p class="mt-2 mb-0.5">
-                    Options:
-                  </p>
-                  <ul class="list-disc list-inside">
-                    <li>
-                      <strong>lowercase</strong> - turn all words lowercase
-                    </li>
-                    <li>
-                      <strong>UPPERCASE</strong> - turn all words uppercase
-                    </li>
-                    <li>
-                      <strong>Title Case</strong> - capitalize first letter of each word
-                    </li>
-                    <li>
-                      <strong>mixed CASE</strong> - assigned random case to each word (preserved, lowercase, uppercase or title case)
-                    </li>
-                  </ul>
-                </div>
-              </template>
-            </BasePopover>
+                    <p class="mt-2 mb-0.5">
+                      Options:
+                    </p>
+                    <ul class="list-disc list-inside">
+                      <li>
+                        <strong>lowercase</strong> - turn all words lowercase
+                      </li>
+                      <li>
+                        <strong>UPPERCASE</strong> - turn all words uppercase
+                      </li>
+                      <li>
+                        <strong>Title Case</strong> - capitalize first letter of each word
+                      </li>
+                      <li>
+                        <strong>mixed CASE</strong> - assigned random case to each word (preserved, lowercase, uppercase or title case)
+                      </li>
+                    </ul>
+                  </div>
+                </template>
+              </BasePopover>
+            </div>
+
+            <div class="col-span-2 flex items-center">
+              <ToggleGroup v-model="casing" class="mx-0" type="single">
+                <BaseTooltip content="lowercase">
+                  <ToggleGroupItem value="lowercase" aria-label="Toggle lowercase" :variant="casing === 'lowercase' ? 'primary' : 'outline'">
+                    <Icon name="radix-icons:letter-case-lowercase" class="text-[1.25em]" />
+                  </ToggleGroupItem>
+                </BaseTooltip>
+                <BaseTooltip content="UPPERCASE">
+                  <ToggleGroupItem value="uppercase" aria-label="Toggle uppercase" :variant="casing === 'uppercase' ? 'primary' : 'outline'">
+                    <Icon name="radix-icons:letter-case-uppercase" class="text-[1.25em]" />
+                  </ToggleGroupItem>
+                </BaseTooltip>
+                <BaseTooltip content="Title Case">
+                  <ToggleGroupItem value="titlecase" aria-label="Toggle title case" :variant="casing === 'titlecase' ? 'primary' : 'outline'">
+                    <Icon name="radix-icons:letter-case-capitalize" class="text-[1.25em]" />
+                  </ToggleGroupItem>
+                </BaseTooltip>
+                <BaseTooltip content="Mixed case">
+                  <ToggleGroupItem value="mixed" aria-label="Toggle mixed case" :variant="casing === 'mixed' ? 'primary' : 'outline'">
+                    <Icon name="radix-icons:letter-case-toggle" class="text-[1.25em]" />
+                  </ToggleGroupItem>
+                </BaseTooltip>
+              </ToggleGroup>
+            </div>
           </div>
-          <ToggleGroup v-model="casing" class="mx-0" type="single">
-            <BaseTooltip content="lowercase">
-              <ToggleGroupItem value="lowercase" aria-label="Toggle lowercase" :variant="casing === 'lowercase' ? 'primary' : 'outline'">
-                <Icon name="radix-icons:letter-case-lowercase" class="text-[1.25em]" />
-              </ToggleGroupItem>
-            </BaseTooltip>
-            <BaseTooltip content="UPPERCASE">
-              <ToggleGroupItem value="uppercase" aria-label="Toggle uppercase" :variant="casing === 'uppercase' ? 'primary' : 'outline'">
-                <Icon name="radix-icons:letter-case-uppercase" class="text-[1.25em]" />
-              </ToggleGroupItem>
-            </BaseTooltip>
-            <BaseTooltip content="Title Case">
-              <ToggleGroupItem value="titlecase" aria-label="Toggle title case" :variant="casing === 'titlecase' ? 'primary' : 'outline'">
-                <Icon name="radix-icons:letter-case-capitalize" class="text-[1.25em]" />
-              </ToggleGroupItem>
-            </BaseTooltip>
-            <BaseTooltip content="Mixed case">
-              <ToggleGroupItem value="mixed" aria-label="Toggle mixed case" :variant="casing === 'mixed' ? 'primary' : 'outline'">
-                <Icon name="radix-icons:letter-case-toggle" class="text-[1.25em]" />
-              </ToggleGroupItem>
-            </BaseTooltip>
-          </ToggleGroup>
-        </div>
 
-        <div class="flex gap-1">
-          <BaseTooltip :content="isHidden ? 'Show' : 'Hide'">
-            <Toggle v-model="isHidden" variant="outline" aria-label="Hide passphrase" @click="isHidden = !isHidden">
-              <Icon :name=" isHidden ? 'ph:eye' : 'ph:eye-slash'" class="text-[1.25em]" />
-            </Toggle>
-          </BaseTooltip>
-          <BaseTooltip content="Include number">
-            <!-- TODO: disable not working live -->
-            <Toggle
-              v-model="includeNumber"
-              :variant="includeNumber ? 'secondary' : 'outline'"
-              aria-label="Include number"
-              :disabled="isSeparatorRandomNumbers"
-              @click="includeNumber = !includeNumber"
-            >
-              <Icon name="ph:number-nine" class="text-[1.25em]" />
-            </Toggle>
-          </BaseTooltip>
-        </div>
+          <div class="flex flex-col items-start gap-2">
+            <Label>Extras</Label>
 
-        <Label v-if="isDefined(calculatedEntropy)">Entropy: {{ calculatedEntropy }} bit</Label>
+            <div class="flex items-center gap-1">
+              <BaseTooltip :content="isHidden ? 'Show' : 'Hide'">
+                <Toggle v-model="isHidden" variant="outline" aria-label="Hide passphrase" @click="isHidden = !isHidden">
+                  <Icon :name=" isHidden ? 'ph:eye' : 'ph:eye-slash'" class="text-[1.25em]" />
+                </Toggle>
+              </BaseTooltip>
+
+              <BaseTooltip content="Include number">
+                <Toggle
+                  v-model="includeNumber"
+                  :variant="includeNumber ? 'primary' : 'outline'"
+                  aria-label="Include number"
+                  :disabled="isSeparatorRandomNumbers"
+                  @click="includeNumber = !includeNumber"
+                >
+                  <Icon name="ph:number-nine" class="text-[1.25em]" />
+                </Toggle>
+              </BaseTooltip>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
