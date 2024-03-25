@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { WordlistSlug } from '~/models/wordlist'
+import type { WordCasingOption } from '~/models'
 
 const selectedList = useCookie<WordlistSlug>('selected-wordlist', { default: () => 'eff-long' })
 const { selectedLists } = useWordlistSelection()
@@ -14,7 +15,7 @@ const wordCountModel = computed<number[]>({
 })
 
 // Extra settings toggles
-const includeNumber = useLocalStorage<boolean>('passphrase:include-number', true)
+const includeNumber = useCookie<boolean>('passphrase:include-number', { default: () => false })
 const isHidden = ref<boolean>(false)
 
 const {
@@ -58,12 +59,18 @@ function useCustomSeparator() {
   }
 
   watch(customSeparator, (val) => {
-    // restrict to single character (last input takes precedence)
+    if (val.length === 1) {
+      return
+    }
+
+    customSeparator.value ||= DEFAULT_CUSTOM_SEPARATOR
+
     if (val.length > 1) {
-      const last = val.at(-1) ?? DEFAULT_CUSTOM_SEPARATOR
+      // restrict to single character (last input takes precedence)
+      const last = val.trimStart().at(-1) ?? DEFAULT_CUSTOM_SEPARATOR
       customSeparator.value = last
     }
-  }, { flush: 'post' })
+  }, { flush: 'post', immediate: true })
 
   return {
     customSeparator,
@@ -114,16 +121,8 @@ const calculatedEntropy = computed(() => {
 })
 
 // TODO: some wordlist could have mixed casing already, make the default be keep case, and add mixed case option as well
-type Casing = 'keep' | 'upper' | 'lower' | 'capitalized'
 // TODO: ls not working
-const casing = useCookie<Casing>('passphrase:casing', { default: () => 'lower' })
-watch(casing, (val) => {
-  // when toggle unselected
-  // TODO: do not allow unselect, make it so toggle always means 'turn on'
-  if (!val) {
-    casing.value = 'lower'
-  }
-}, { immediate: true })
+const casing = useCookie<WordCasingOption>('passphrase:casing', { default: () => 'preserve' })
 
 const setNewPassphrase = () => {
   // TODO: turn to computed
@@ -136,8 +135,10 @@ const setNewPassphrase = () => {
     count: wordCount.value,
     separator: _separator,
     randomNumbersAsSeparator: isSeparatorRandomNumbers.value,
+    randomNumberAsSeparatorDigits: 2,
     casing: casing.value,
     includeNumber: includeNumber.value,
+    includeNumberPosition: undefined, // start or end
   })
 }
 
@@ -173,7 +174,7 @@ const selectAndCopyPassphrase = () => {
 
 const { g, c /* keys you want to monitor */ } = useMagicKeys()
 
-// TODO: disable when custo separator input focused
+// TODO: disable when custom separator input focused
 const activeEl = useActiveElement()
 const isBodyActive = computed(() => activeEl.value?.tagName === 'BODY')
 const isCopyBtnActive = computed(() => activeEl.value?.id === 'copy-btn')
@@ -248,7 +249,7 @@ whenever(c, () => {
         </BaseTooltip>
 
         <!-- TODO: shift when custom selected, with cookie on first load -->
-        <div class="flex items-end gap-2">
+        <div class="col-span-2 flex items-end gap-2">
           <div class="flex flex-col gap-1.5 grow">
             <Label>Separator</Label>
             <Select v-model="separator">
@@ -320,22 +321,61 @@ whenever(c, () => {
           </div>
         </div>
 
-        <div class="flex flex-col items-start gap-2">
-          <Label>Case</Label>
+        <div class="col-span-2 flex flex-col items-start gap-2">
+          <div class="flex items-center">
+            <Label>Case</Label>
+
+            <BasePopover
+              side="top"
+              content-class="text-xs p-2"
+            >
+              <Icon class="ml-1 text-sm" name="ph:info" />
+
+              <template #content>
+                <div>
+                  <p>Choose to apply specific case to each word.</p>
+                  <p>Case stays preserved when none are selected.</p>
+
+                  <p class="mt-2 mb-0.5">
+                    Options:
+                  </p>
+                  <ul class="list-disc list-inside">
+                    <li>
+                      <strong>lowercase</strong> - turn all words lowercase
+                    </li>
+                    <li>
+                      <strong>UPPERCASE</strong> - turn all words uppercase
+                    </li>
+                    <li>
+                      <strong>Title Case</strong> - capitalize first letter of each word
+                    </li>
+                    <li>
+                      <strong>mixed CASE</strong> - assigned random case to each word (preserved, lowercase, uppercase or title case)
+                    </li>
+                  </ul>
+                </div>
+              </template>
+            </BasePopover>
+          </div>
           <ToggleGroup v-model="casing" class="mx-0" type="single">
             <BaseTooltip content="lowercase">
-              <ToggleGroupItem value="lower" aria-label="Toggle lowercase" :variant="casing === 'lower' ? 'primary' : 'outline'">
+              <ToggleGroupItem value="lowercase" aria-label="Toggle lowercase" :variant="casing === 'lowercase' ? 'primary' : 'outline'">
                 <Icon name="radix-icons:letter-case-lowercase" class="text-[1.25em]" />
               </ToggleGroupItem>
             </BaseTooltip>
             <BaseTooltip content="UPPERCASE">
-              <ToggleGroupItem value="upper" aria-label="Toggle uppercase" :variant="casing === 'upper' ? 'primary' : 'outline'">
+              <ToggleGroupItem value="uppercase" aria-label="Toggle uppercase" :variant="casing === 'uppercase' ? 'primary' : 'outline'">
                 <Icon name="radix-icons:letter-case-uppercase" class="text-[1.25em]" />
               </ToggleGroupItem>
             </BaseTooltip>
             <BaseTooltip content="Title Case">
-              <ToggleGroupItem value="capitalized" aria-label="Toggle title case" :variant="casing === 'capitalized' ? 'primary' : 'outline'">
+              <ToggleGroupItem value="titlecase" aria-label="Toggle title case" :variant="casing === 'titlecase' ? 'primary' : 'outline'">
                 <Icon name="radix-icons:letter-case-capitalize" class="text-[1.25em]" />
+              </ToggleGroupItem>
+            </BaseTooltip>
+            <BaseTooltip content="Mixed case">
+              <ToggleGroupItem value="mixed" aria-label="Toggle mixed case" :variant="casing === 'mixed' ? 'primary' : 'outline'">
+                <Icon name="radix-icons:letter-case-toggle" class="text-[1.25em]" />
               </ToggleGroupItem>
             </BaseTooltip>
           </ToggleGroup>

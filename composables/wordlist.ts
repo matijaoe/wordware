@@ -15,6 +15,7 @@ const DEFAULT_WORDLISTS = new Set<WordlistSlug>([
 ])
 
 export const useWordlistSelection = () => {
+  // TODO: not working reliably, perhaps use local storage and keep cookie in sync?
   const selectedLists = useCookie<Set<WordlistSlug>>('wordlist:selection', {
     default: () => DEFAULT_WORDLISTS,
     decode: (value: string) => {
