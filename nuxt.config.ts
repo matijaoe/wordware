@@ -5,7 +5,12 @@ export default defineNuxtConfig({
     'shadcn-nuxt',
     '@vueuse/nuxt',
     'nuxt-icon',
+    '@nuxtjs/color-mode',
   ],
+
+  colorMode: {
+    classSuffix: '',
+  },
 
   shadcn: {
     /**

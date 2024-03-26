@@ -237,7 +237,7 @@ whenever(c, () => {
           <!-- TODO: text balance not working with span for each char, or v-html -->
           <div
             ref="passphraseEl"
-            class="selection:bg-indigo-900 break-all flex flex-wrap justify-center content-center gap-y-0 tracking-wide leading-[1.5] font-mono text-center w-full rounded-lg border border-input bg-background px-5 py-3.5 min-h-[140px] text-2xl ring-offset-background"
+            class="selection:bg-indigo-200 dark:selection:bg-indigo-900 break-all flex flex-wrap justify-center content-center gap-y-0 tracking-wide leading-[1.5] font-mono text-center w-full rounded-lg border border-input bg-background px-5 py-3.5 min-h-[140px] text-2xl ring-offset-background"
             v-html="passphraseHtml"
           />
         </button>

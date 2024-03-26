@@ -116,7 +116,11 @@ const { wordlist, constructedDescription, words } = useWordlist(() => route.para
           >
             {{ wordlist.stats.uniqueCharacterPrefix }} characters
           </InfoItem>
+        </div>
 
+        <hr class="mt-6">
+
+        <div class="mt-6 grid grid-cols-[300px_1fr] gap-x-2 gap-y-2">
           <InfoItem
             :wrapper="false"
             label="Free of exact duplicates"
