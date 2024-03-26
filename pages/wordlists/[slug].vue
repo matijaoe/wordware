@@ -1,11 +1,13 @@
 <script lang="ts" setup>
+import type { WordlistSlug } from '~/models/wordlist'
+
 definePageMeta({
   layout: false,
 })
 
 const route = useRoute('wordlists-slug')
 
-const { wordlist, constructedDescription, words } = useWordlist(() => route.params.slug)
+const { wordlist, constructedDescription, words } = useWordlist(() => route.params.slug as WordlistSlug)
 
 // TODO: add tooltips to each stat
 // https://github.com/sts10/wla/tree/main
@@ -114,7 +116,11 @@ const { wordlist, constructedDescription, words } = useWordlist(() => route.para
           >
             {{ wordlist.stats.uniqueCharacterPrefix }} characters
           </InfoItem>
+        </div>
 
+        <hr class="mt-6">
+
+        <div class="mt-6 grid grid-cols-[300px_1fr] gap-x-2 gap-y-2">
           <InfoItem
             :wrapper="false"
             label="Free of exact duplicates"
@@ -161,7 +167,7 @@ const { wordlist, constructedDescription, words } = useWordlist(() => route.para
             :wrapper="false"
             label="Free of non-ASCII characters"
           >
-            {{ wordlist.stats.hasNonAsciiCharacters }}
+            {{ !wordlist.stats.hasNonAsciiCharacters }}
           </InfoItem>
 
           <InfoItem
@@ -211,7 +217,7 @@ const { wordlist, constructedDescription, words } = useWordlist(() => route.para
 
     <template #right>
       <!-- TODO: virtual scroll -->
-      <ScrollArea class="h-screen w-full cursor-crosshair select-none" type="hover">
+      <ScrollArea class="hidden xl:block fixed top-0 bottom-0 w-full cursor-crosshair select-none" type="hover">
         <div class="h-screen overflow-scroll py-4 pr-2">
           <div class="flex flex-wrap gap-3">
             <span v-for="word in words" :key="word" class="font-mono text-xl leading-none text-muted-foreground/20 hover:text-muted-foreground">

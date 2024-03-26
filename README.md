@@ -1,4 +1,6 @@
-# Wordware, a sleek passphrase generator
+# Wordware 🔐
+
+A sleek passphrase generator and wordlist manager.
 
 ## Setup
 
