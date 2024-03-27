@@ -43,6 +43,29 @@ const { wordlist, constructedDescription, words } = useWordlist(() => route.para
           {{ constructedDescription }}
         </p>
 
+        <div class="mt-4 flex items-center gap-2">
+          <NuxtLink :to="`/wordlist/${wordlist.localFile}`" target="_blank">
+            <Badge as="div" variant="default" size="icon" class="flex items-center gap-1">
+              See list
+              <Icon name="ph:file-text" class="text-[1.15em]" @click.stop="" />
+            </Badge>
+          </NuxtLink>
+
+          <NuxtLink download external target="_blank" :to="`/wordlist/${wordlist.localFile}`">
+            <Badge as="div" variant="outline" size="icon" class="flex items-center gap-1">
+              Download
+              <Icon name="ph:download" class="text-[1.15em]" @click.stop="" />
+            </Badge>
+          </NuxtLink>
+
+          <NuxtLink external target="_blank" :to="wordlist.sourceFile">
+            <Badge as="div" variant="outline" size="icon" class="flex items-center gap-1">
+              Source
+              <Icon name="ph:globe" class="text-[1.15em]" @click.stop="" />
+            </Badge>
+          </NuxtLink>
+        </div>
+
         <!-- TODO: add info popup to each -->
         <div class="mt-6 grid grid-cols-[300px_1fr] gap-x-2 gap-y-2">
           <InfoItem

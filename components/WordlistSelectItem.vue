@@ -14,7 +14,7 @@ const { wordlist } = useWordlist(() => props.value)
       <p class="w-">
         {{ wordlist.name }}
       </p>
-      <span class="text-xs text-muted-foreground font-mono">{{ wordlist.stats.words.toLocaleString() }} words, {{ wordlist.stats.entropyPerWord }} bits per word</span>
+      <span class="text-xs text-muted-foreground">{{ wordlist.stats.words.toLocaleString() }} words, {{ wordlist.stats.entropyPerWord }} bits per word</span>
     </div>
     <template v-else>
       {{ value }}

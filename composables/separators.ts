@@ -161,6 +161,8 @@ const separatorOptions = [
   ...symbolSeparators,
 ] as const
 
+export type SeparatorOption = typeof separatorOptions[number]
+
 export type SeparatorValue = typeof separatorOptions[number]['value']
 
 export const useSeparators = () => {
