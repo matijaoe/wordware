@@ -113,7 +113,10 @@ const generatePassphraseUsingConfig = () => {
   })
 }
 
+const copiedShown = refAutoReset(false, 1500)
+
 const setNewPassphrase = () => {
+  copiedShown.value = false
   passphrase.value = generatePassphraseUsingConfig()
 }
 
@@ -142,6 +145,7 @@ const copyPassphrase = () => {
 const selectAndCopyPassphrase = () => {
   selectPassphrase()
   copyPassphrase()
+  copiedShown.value = true
 }
 
 const bulkGenerate = (amount = 10) => {
@@ -161,7 +165,7 @@ const onBulkGenerateAndCopy = () => {
     description: 'Bulk generated 10 random passphrases',
     variant: 'default',
     type: 'foreground',
-    duration: 3000,
+    duration: 1000,
   })
 }
 
@@ -223,16 +227,26 @@ whenever(c, () => {
         />
       </div>
 
-      <BaseTooltip :delay="1000">
-        <Button id="copy-btn" variant="outline" size="default" @click="selectAndCopyPassphrase">
-          Copy
-        </Button>
-        <template #content>
-          <p>
-            Press <Kbd>C</Kbd> to copy
-          </p>
-        </template>
-      </BaseTooltip>
+      <TooltipProvider disable-hoverable-content>
+        <Tooltip :open="copiedShown">
+          <TooltipTrigger as-child>
+            <!-- tooltip in tooltip -->
+            <BaseTooltip :delay="1000">
+              <Button id="copy-btn" variant="outline" size="default" @click="selectAndCopyPassphrase()">
+                Copy
+              </Button>
+              <template #content>
+                <p>
+                  Press <Kbd>C</Kbd> to copy
+                </p>
+              </template>
+            </BaseTooltip>
+          </TooltipTrigger>
+          <TooltipContent>
+            Copied!
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       <BaseTooltip :delay="1000">
         <Button id="generate-btn" variant="default" size="default" @click="setNewPassphrase">
