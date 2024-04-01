@@ -29,6 +29,11 @@ const symbolSeparators = [
     symbol: '-',
   },
   {
+    label: 'underscore',
+    value: 'underscore',
+    symbol: '_',
+  },
+  {
     label: 'period',
     value: 'period',
     symbol: '.',

@@ -5,7 +5,7 @@
 <template>
   <div>
     <PassphraseGenerator
-      class="w-full mt-[8vh]"
+      class="w-full mt-[10vh]"
     />
   </div>
 </template>

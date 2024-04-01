@@ -54,7 +54,7 @@ export default antfu({
           varsIgnorePattern: '^_',
         },
       ],
-      'max-statements-per-line': ['error', { max: 1 }],
+      'max-statements-per-line': ['error', { max: 2 }],
       'brace-style': ['error', '1tbs', { allowSingleLine: true }],
       'arrow-parens': ['error', 'always'],
     },

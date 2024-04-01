@@ -33,20 +33,26 @@ const selectedSeparator = computed(() => separatorOptions.find((item) => item.va
 const isSeparatorCustom = computed(() => separator.value === '<CUSTOM>')
 const isSeparatorRandomNumbers = computed(() => separator.value === '<RANDOM_NUMBERS>')
 
-const { customSeparator, customSeparatorEl, resetCustomSeparator } = useCustomSeparator()
-
 const isSpecialOrModeSeparator = (value: SeparatorValue) => {
   // @ts-expect-error
   return [...modeSeparators, ...spaceSeparators].map((s) => s.value).includes(value)
 }
 
-// unselect and disable includeNumber toggle when random numbers as separator selected
-// TODO: always show custom separator input, but switch to custom or any when starting to type (and when it isnt matching others?)
+const { customSeparator, customSeparatorEl, resetCustomSeparator, shouldCustomSeparatorShow } = useCustomSeparator()
+
+const onCustomSeparatorFocus = () => {
+  // set cursor to end
+  const inputEl = customSeparatorEl.value?.inputEl
+  if (!isDefined(inputEl)) {
+    return
+  }
+  // select all text
+  inputEl.setSelectionRange(0, inputEl.value.length)
+}
+
 watch(separator, (val) => {
   if (val === '<RANDOM_NUMBERS>') {
     includeNumber.value = false
-  } else if (val !== '<CUSTOM>') {
-    resetCustomSeparator()
   }
 }, { immediate: true })
 
@@ -56,17 +62,50 @@ function useCustomSeparator() {
   const customSeparator = useCookie<string>('passphrase:custom-separator', { default: () => DEFAULT_CUSTOM_SEPARATOR })
   const customSeparatorEl = ref<{ inputEl: HTMLInputElement, focus: () => void }>()
 
+  const shouldCustomSeparatorShow = computed(() => {
+    return separator.value !== '<RANDOM_NUMBERS>' && separator.value !== 'none'
+  })
+
   const resetCustomSeparator = () => {
     customSeparator.value = DEFAULT_CUSTOM_SEPARATOR
   }
 
+  const findBySymbol = (val: string) => separatorOptions.find((item) => item.symbol === val)
+
+  const selectAllText = () => {
+    const inputEl = customSeparatorEl.value?.inputEl
+    if (!isDefined(inputEl)) { return }
+    // select all text
+    inputEl.setSelectionRange(0, inputEl.value.length)
+  }
+
+  // TODO: messy watchers
+
+  watch(separator, (val) => {
+    const specialValues = ['none', '<RANDOM_NUMBERS>', '<CUSTOM>'] as SeparatorValue[]
+
+    if (!specialValues.includes(val)) {
+      customSeparator.value = selectedSeparator.value?.symbol ?? EMPTY_SPACE
+    }
+  }, { flush: 'post', immediate: true })
+
   watch(customSeparator, (val) => {
-    if (val.length === 1) {
-      return
+    if (val === '') {
+      customSeparator.value = DEFAULT_CUSTOM_SEPARATOR
     }
 
-    // still issues sometime when switching to option and inputing first char, it isnt set
-    // customSeparator.value ||= DEFAULT_CUSTOM_SEPARATOR
+    if (val.length === 1) {
+      // set separator option
+      const sep = findBySymbol(val)
+      if (isDefined(sep)) {
+        separator.value = sep.value
+      } else {
+        separator.value = '<CUSTOM>'
+      }
+
+      selectAllText()
+      return
+    }
 
     if (val.length > 1) {
       // restrict to single character (last input takes precedence)
@@ -75,10 +114,20 @@ function useCustomSeparator() {
     }
   }, { flush: 'post', immediate: true })
 
+  whenever(customSeparatorEl, () => {
+    // only allow caret to be at the end
+    customSeparatorEl.value?.inputEl?.addEventListener('keydown', (e) => {
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+        e.preventDefault()
+      }
+    })
+  }, { once: true })
+
   return {
     customSeparator,
     customSeparatorEl,
     resetCustomSeparator,
+    shouldCustomSeparatorShow,
   }
 }
 
@@ -191,8 +240,8 @@ whenever(c, () => {
 
 <template>
   <div>
-    <h2 class="text-2xl md:text-4xl font-mono leading-snug text-center text-balance mb-4 md:mb-10 max-w-4xl mx-auto ">
-      Sleek passphrase generator
+    <h2 class="italic text-2xl md:text-4xl font-mono leading-snug text-center text-balance mb-4 md:mb-10 max-w-4xl mx-auto">
+      sleek passphrase generator
     </h2>
 
     <div class="block w-full max-w-4xl mx-auto">
@@ -231,7 +280,7 @@ whenever(c, () => {
         <Tooltip :open="copiedShown">
           <TooltipTrigger as-child>
             <!-- tooltip in tooltip -->
-            <BaseTooltip :delay="1000">
+            <BaseTooltip :delay="750">
               <Button id="copy-btn" variant="outline" size="default" @click="selectAndCopyPassphrase()">
                 Copy
               </Button>
@@ -248,7 +297,7 @@ whenever(c, () => {
         </Tooltip>
       </TooltipProvider>
 
-      <BaseTooltip :delay="1000">
+      <BaseTooltip :delay="750">
         <Button id="generate-btn" variant="default" size="default" @click="setNewPassphrase">
           Generate new
         </Button>
@@ -282,6 +331,7 @@ whenever(c, () => {
                   :key="item.value"
                   class="text-left"
                   :value="item.value"
+                  :disabled="item.value === '<CUSTOM>'"
                 >
                   <span class="w-full">{{ item.label }}</span>
                   <span
@@ -293,11 +343,14 @@ whenever(c, () => {
             </SelectContent>
           </Select>
         </div>
+
+        <!-- v-if="separator === '<CUSTOM>'" -->
         <Input
-          v-if="separator === '<CUSTOM>'"
+          v-if="shouldCustomSeparatorShow"
           ref="customSeparatorEl"
           v-model="customSeparator"
           class="w-10 text-md aspect-square text-center shrink-0"
+          @focus="onCustomSeparatorFocus"
         />
       </div>
 
