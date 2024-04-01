@@ -94,8 +94,6 @@ const calculatedEntropy = computed(() => {
   return entropy.toFixed(2)
 })
 
-// TODO: some wordlist could have mixed casing already, make the default be keep case, and add mixed case option as well
-// TODO: ls not working
 const casing = useCookie<WordCasingOption>('passphrase:casing', { default: () => 'preserve' })
 
 const generatePassphraseUsingConfig = () => {
@@ -163,6 +161,7 @@ const onBulkGenerateAndCopy = () => {
     description: 'Bulk generated 10 random passphrases',
     variant: 'default',
     type: 'foreground',
+    duration: 3000,
   })
 }
 

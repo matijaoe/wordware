@@ -31,7 +31,9 @@ watch(isModalOpen, (open) => {
 </script>
 
 <template>
-  <div class="grid lg:grid-cols-[300px_1fr] gap-4 mt-4">
+  <!-- TODO: enable grid when filters implemented -->
+  <!-- <div class="grid lg:grid-cols-[300px_1fr] gap-4 mt-4"> -->
+  <div class="grid gap-4">
     <div>
       <div class="sticky top-8">
         <h1 class="text-2xl md:text-4xl">
