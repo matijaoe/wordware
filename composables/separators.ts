@@ -29,6 +29,11 @@ const symbolSeparators = [
     symbol: '-',
   },
   {
+    label: 'underscore',
+    value: 'underscore',
+    symbol: '_',
+  },
+  {
     label: 'period',
     value: 'period',
     symbol: '.',
@@ -160,6 +165,8 @@ const separatorOptions = [
   ...modeSeparators,
   ...symbolSeparators,
 ] as const
+
+export type SeparatorOption = typeof separatorOptions[number]
 
 export type SeparatorValue = typeof separatorOptions[number]['value']
 
