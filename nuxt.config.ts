@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     'nuxt-icon',
     '@nuxtjs/color-mode',
+    "@nuxt/image"
   ],
 
   colorMode: {

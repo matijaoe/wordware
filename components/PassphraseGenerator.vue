@@ -244,7 +244,7 @@ whenever(c, () => {
       sleek passphrase generator
     </h2>
 
-    <div class="block w-full max-w-4xl mx-auto">
+    <div>
       <div class="flex justify-end mb-3 mr-2">
         <Badge v-if="isDefined(calculatedEntropy)" variant="outline">
           <span class="tabular-nums mr-1">{{ calculatedEntropy }}</span> bits of entropy
@@ -292,7 +292,7 @@ whenever(c, () => {
             </BaseTooltip>
           </TooltipTrigger>
           <TooltipContent>
-            Copied!
+            Copied to clipboard!
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
