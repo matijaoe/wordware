@@ -1,5 +1,3 @@
-import { StorageSerializers } from '@vueuse/core'
-import { destr } from 'destr'
 import { camelCase } from 'scule'
 import { WordlistMap } from '~/constants/generated/wordlist-map'
 import { type WordlistExport, Wordlists } from '~/constants/generated/wordlists'
@@ -50,7 +48,6 @@ export const useWordlist = (_wordlistId: MaybeRefOrGetter<WordlistSlug | undefin
 
   const wordlist = computed(() => isDefined(wordlistSlug) ? WordlistMap.get(wordlistSlug.value) : undefined)
 
-  // TODO: only temp
   const constructedDescription = computed(() => {
     if (!isDefined(wordlist)) {
       return ''
@@ -60,8 +57,8 @@ export const useWordlist = (_wordlistId: MaybeRefOrGetter<WordlistSlug | undefin
       return wordlist.value.description
     }
 
-    const { words, entropyPerWord, efficiencyPerCharacter, entropyPerUniqueCharacterPrefix } = wordlist.value.stats
-    return `${words.toLocaleString()} words, ${entropyPerWord} bits of entropy per word, ${efficiencyPerCharacter} bits of entropy per character, ${entropyPerUniqueCharacterPrefix} bits of entropy per unique character prefix`
+    const { words, entropyPerWord } = wordlist.value.stats
+    return `${words.toLocaleString()} words, ${entropyPerWord} bits of entropy per word`
   })
 
   const words = computed(() => {

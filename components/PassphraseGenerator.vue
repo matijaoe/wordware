@@ -38,7 +38,7 @@ const isSpecialOrModeSeparator = (value: SeparatorValue) => {
   return [...modeSeparators, ...spaceSeparators].map((s) => s.value).includes(value)
 }
 
-const { customSeparator, customSeparatorEl, resetCustomSeparator, shouldCustomSeparatorShow } = useCustomSeparator()
+const { customSeparator, customSeparatorEl, shouldCustomSeparatorShow } = useCustomSeparator()
 
 const onCustomSeparatorFocus = () => {
   // set cursor to end
@@ -214,7 +214,7 @@ const onBulkGenerateAndCopy = () => {
     description: 'Bulk generated 10 random passphrases',
     variant: 'default',
     type: 'foreground',
-    duration: 1000,
+    duration: 3000,
   })
 }
 
