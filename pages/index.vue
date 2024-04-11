@@ -23,7 +23,7 @@
           <NuxtImg src="https://imgs.xkcd.com/comics/password_strength.png" class="mx-auto mt-8" width="600" />
 
           <p class="mt-6">
-            On the other hand, passphrases are easy to remember, but very difficult to crack. Let's say you use an EFF Long List to generate a 6 word passphrase. Even assuming the attacker knows the exact wordlist and number of words you used, there's still 7776^6 possible combinations for the attacker to try out. That's 221073919720733357899776 possible combinations. Even if the attacker could try 1 trillion combinations per second, it would take him them millions of years to try all the possible combinations. That's what makes passphrases so secure and powerful.
+            On the other hand, passphrases are easy to remember, but very difficult to crack. Let's say you use an EFF Long List to generate a 6 word passphrase. Even assuming the attacker knows the exact wordlist and number of words you used, there's still 7776^6 possible combinations for the attacker to try out. That's 221073919720733357899776 possible combinations. Even if the attacker could try 1 trillion combinations per second, it would take him millions of years to try all the possible combinations. That's what makes passphrases so secure and powerful.
           </p>
         </CardContent>
       </Card>
