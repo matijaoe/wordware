@@ -2,6 +2,9 @@
 
 A sleek passphrase generator and wordlist manager.
 
+![Wordware](https://github.com/matijaoe/wordware/assets/46557266/c605bc74-2bc4-414d-a01a-0473416ea5da)
+
+
 ## Setup
 
 Make sure to install the dependencies:
