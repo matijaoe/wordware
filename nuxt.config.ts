@@ -39,9 +39,12 @@ export default defineNuxtConfig({
     ],
   },
 
-  app: {
+   app: {
     head: {
       title: 'Wordware',
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+      ],
     },
   },
 
